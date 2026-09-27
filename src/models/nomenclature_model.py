@@ -1,6 +1,6 @@
 from src.core.entity_model import entity_model
 from src.core.exception import arguments_exception
-from src.models.nomenclature_group_model import group_model
+from src.models.nomenclature_group_model import nomenclature_group_model
 from src.models.range_model import range_model
 
 
@@ -18,7 +18,7 @@ class nomenclature_model(entity_model):
         self,
         name: str = None,
         full_name: str = None,
-        group: group_model = None,
+        group: nomenclature_group_model = None,
         range_unit: range_model = None,
     ) -> None:
         """Конструктор номенклатуры."""
@@ -56,14 +56,14 @@ class nomenclature_model(entity_model):
         self._full_name = cleaned
 
     @property
-    def group(self) -> group_model:
+    def group(self) -> nomenclature_group_model:
         """Получить группу номенклатуры (п. 8 ТЗ)."""
         return self._group
 
     @group.setter
-    def group(self, value: group_model) -> None:
+    def group(self, value: nomenclature_group_model) -> None:
         """Установить группу номенклатуры."""
-        if value is not None and not isinstance(value, group_model):
+        if value is not None and not isinstance(value, nomenclature_group_model):
             raise arguments_exception(
                 field="group",
                 message="Группа номенклатуры должна быть объектом group_model",
