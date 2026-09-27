@@ -1,4 +1,4 @@
-from core.abstract_model import name_id
+from src.core.abstract_model import name_id
 
 """
 Общий класс для наследования. Содержит стандартное определение: код, наименование

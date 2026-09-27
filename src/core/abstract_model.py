@@ -39,7 +39,10 @@ class name_id(ABC):
 
     @name.setter
     def name(self, value: str) -> None:
-        """Установить имя с валидацией."""
+        """Установить имя с валидацией (<= 50 символов)"""
         if not value or not isinstance(value, str) or not value.strip():
             raise arguments_exception(field="name", message="Имя объекта не может быть пустым")
-        self._name = value.strip()
+        cleaned_value = value.strip()
+        if len(cleaned_value) > 50:
+            raise arguments_exception(field="name", message="Длина не должна превышать 50 символов")
+        self._name = cleaned_value
