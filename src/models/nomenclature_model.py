@@ -24,7 +24,7 @@ class nomenclature_model(entity_model):
         """Конструктор номенклатуры."""
         super().__init__(name=name)
         self._full_name: str = ""
-        self._group: group_model = None
+        self._group: nomenclature_group_model = None
         self._range: range_model = None
 
         if full_name is not None:
