@@ -1,0 +1,23 @@
+{
+  "company": {
+    "name": "ООО Ромашка",
+    "inn": "7701234567",
+    "bik": "044525225",
+    "account": "40702810123456789012",
+    "ownership_type": "ООО"
+  },
+  "boss_name": "Иванов Иван Иванович",
+  "account_name": "Петрова Анна Сергеевна",
+  "is_first_start": true,
+  "database": {
+    "host": "localhost",
+    "port": "5432",
+    "name": "romashka_db",
+    "login": "admin",
+    "password": "secret_password"
+  },
+  "production": {
+    "name": "Главный цех",
+    "address": "ул. Ленина, 1"
+  }
+}

@@ -3,6 +3,7 @@ from src.models.storage_model import storage_model
 from src.models.range_model import range_model
 from src.models.organization_model import organization_model
 from src.models.nomenclature_model import nomenclature_model
+from src.models.settings_model import settings_model
 
 __all__ = [
     "nomenclature_group_model",
@@ -10,4 +11,5 @@ __all__ = [
     "range_model",
     "organization_model",
     "nomenclature_model",
+    "settings_model",
 ]
