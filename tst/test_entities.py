@@ -66,3 +66,10 @@ def test_abstract_model_invalid_name_raises_error():
     entity = test_entity(name="Корректное имя")
     with pytest.raises(arguments_exception):
         entity.name = ""
+
+# 5. Проверка максимальной длины имени (50 символов)
+def test_abstract_model_name_too_long_raises_error():
+    """Проверка ограничения длины наименования (<= 50 символов)."""
+    long_name = "a" * 51
+    with pytest.raises(arguments_exception):
+        test_entity(name=long_name)
