@@ -46,3 +46,5 @@ class name_id(ABC):
         if len(cleaned_value) > 50:
             raise arguments_exception(field="name", message="Длина не должна превышать 50 символов")
         self._name = cleaned_value
+        
+abstract_model = name_id
