@@ -57,13 +57,33 @@ class settings_manager(abstract_manager):
 
         if "company" in self.__data and isinstance(self.__data["company"], dict):
             comp = self.__data["company"]
-            self.__settings.company = organization_model(
-                name=comp.get("name"),
-                inn=comp.get("inn"),
-                bik=comp.get("bik"),
-                account=comp.get("account"),
-                ownership_type=comp.get("ownership_type"),
-            )
+            org = organization_model()
+            if comp.get("name"):
+                try:
+                    org.name = comp["name"]
+                except Exception:
+                    pass
+            if comp.get("inn"):
+                try:
+                    org.inn = comp["inn"]
+                except Exception:
+                    pass
+            if comp.get("bik"):
+                try:
+                    org.bik = comp["bik"]
+                except Exception:
+                    pass
+            if comp.get("account"):
+                try:
+                    org.account = comp["account"]
+                except Exception:
+                    pass
+            if comp.get("ownership_type"):
+                try:
+                    org.ownership_type = comp["ownership_type"]
+                except Exception:
+                    pass
+            self.__settings.company = org
 
         return True
 

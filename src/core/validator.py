@@ -16,9 +16,7 @@ class operation_exception(Exception):
         return f"Ошибка операции: {self.__message}"
 
 
-# Алиас на случай опечатки в названии (в tst/test_settings_manager.py написано operation_exeption)
 operation_exeption = operation_exception
-
 
 class validator:
     """Утилитный класс для централизованной проверки параметров."""
