@@ -60,3 +60,11 @@ class range_model(entity_model):
                 message="Базовая единица измерения должна быть объектом range_model",
             )
         self._base_range = value if value is not None else self
+
+    """
+    Фабричный метод: создать килограмм с базовой единицей грамм
+    """
+    @staticmethod
+    def create_kilogramm() -> "range_model":
+        gram = range_model(name="грамм", conversion_factor=1.0)
+        return range_model(name="кг", conversion_factor=1000.0, base_range=gram)

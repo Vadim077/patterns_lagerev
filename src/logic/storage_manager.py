@@ -140,8 +140,8 @@ class storage_manager(abstract_manager):
     Генерация базовых и производных единиц измерения
     """
     def __init_ranges(self) -> None:
-        gram = range_model("грамм", 1)
-        kg = range_model("кг", 1000, gram)
+        kg = range_model.create_kilogramm()
+        gram = kg.base_range
         ml = range_model("миллилитр", 1)
         liter = range_model("литр", 1000, ml)
         piece = range_model("штука", 1)

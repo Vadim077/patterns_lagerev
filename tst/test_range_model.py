@@ -64,3 +64,15 @@ def test_range_model_name_too_long_raises_error():
     # Действие и Проверка
     with pytest.raises(arguments_exception):
         range_model(name=too_long_name)
+
+def test_range_model_create_kilogramm_factory():
+    """Сценарий: Создание единицы измерения через фабричный метод create_kilogramm."""
+    # Действие
+    kg = range_model.create_kilogramm()
+
+    # Проверка
+    assert kg.name == "кг"
+    assert kg.conversion_factor == 1000.0
+    assert kg.base_range is not None
+    assert kg.base_range.name == "грамм"
+    assert kg.base_range.conversion_factor == 1.0
