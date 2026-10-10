@@ -5,12 +5,13 @@ from src.models import (
     nomenclature_group_model,
     storage_model,
     nomenclature_model,
+    recipe_model,
 )
 
 
 """
 Центральное хранилище данных приложения (Singleton)
-Хранит коллекции: складов, единиц измерения, групп номенклатуры, номенклатуры
+Хранит коллекции: складов, единиц измерения, групп номенклатуры, номенклатуры, рецептов
 Каждый объект в коллекциях гарантированно уникален
 """
 class storage_manager(abstract_manager):
@@ -20,6 +21,7 @@ class storage_manager(abstract_manager):
     __groups: list = []
     __storages: list = []
     __nomenclatures: list = []
+    __recipes: list = []
 
     """
     Паттерн Singleton
@@ -81,6 +83,13 @@ class storage_manager(abstract_manager):
         return self.__nomenclatures
 
     """
+    Список рецептов (технологических карт)
+    """
+    @property
+    def recipes(self) -> list[recipe_model]:
+        return self.__recipes
+
+    """
     Добавить элемент в список с проверкой уникальности
     """
     def __append_unique(self, target_list: list, item: object) -> bool:
@@ -114,6 +123,12 @@ class storage_manager(abstract_manager):
         return self.__append_unique(self.__nomenclatures, item)
 
     """
+    Добавить рецепт (с гарантией уникальности)
+    """
+    def add_recipe(self, item: recipe_model) -> bool:
+        return self.__append_unique(self.__recipes, item)
+
+    """
     Переопределенный метод обработки данных
     При первом старте (is_first_start == True) формирует первичные данные
     """
@@ -125,6 +140,7 @@ class storage_manager(abstract_manager):
         self.__init_groups()
         self.__init_storages()
         self.__init_nomenclatures()
+        self.__init_recipes()
         return True
 
     """
@@ -135,80 +151,94 @@ class storage_manager(abstract_manager):
         self.__groups.clear()
         self.__storages.clear()
         self.__nomenclatures.clear()
+        self.__recipes.clear()
+        self.__settings = None
 
     """
-    Генерация базовых и производных единиц измерения
+    Генерация базовых и производных единиц измерения через фабричные методы
     """
     def __init_ranges(self) -> None:
         kg = range_model.create_kilogramm()
         gram = kg.base_range
+        piece = range_model.create_piece()
         ml = range_model("миллилитр", 1)
         liter = range_model("литр", 1000, ml)
-        piece = range_model("штука", 1)
 
         for unit in [gram, kg, ml, liter, piece]:
             self.add_range(unit)
 
     """
-    Генерация групп номенклатуры
+    Генерация групп номенклатуры через фабричные методы
     """
     def __init_groups(self) -> None:
-        group_raw = nomenclature_group_model("Сырье")
-        group_ingredients = nomenclature_group_model("Ингредиенты")
+        group_raw = nomenclature_group_model.create_raw()
+        group_ingredients = nomenclature_group_model.create_ingredients()
+        group_semi = nomenclature_group_model.create_semi_finished()
+        group_products = nomenclature_group_model.create_products()
+        group_packaging = nomenclature_group_model.create_packaging()
 
-        for group in [group_raw, group_ingredients]:
+        for group in [group_raw, group_ingredients, group_semi, group_products, group_packaging]:
             self.add_group(group)
 
     """
-    Генерация складов
+    Генерация складов через фабричные методы
     """
     def __init_storages(self) -> None:
-        storage_main = storage_model("Основной склад")
-        storage_cold = storage_model("Холодильник")
+        storage_main = storage_model.create_main()
+        storage_cold = storage_model.create_cold()
 
         for storage in [storage_main, storage_cold]:
             self.add_storage(storage)
 
     """
-    Генерация номенклатуры с привязкой к созданным группам и единицам
+    Генерация номенклатуры через фабричные методы
     """
     def __init_nomenclatures(self) -> None:
-        if not self.__groups or len(self.__ranges) < 5:
+        group_raw = next((g for g in self.__groups if g.name == "Сырье"), self.__groups[0])
+        group_ing = next((g for g in self.__groups if g.name == "Ингредиенты"), self.__groups[1])
+        group_semi = next((g for g in self.__groups if g.name == "Полуфабрикаты"), None)
+        group_prod = next((g for g in self.__groups if g.name == "Готовая продукция"), None)
+        group_pkg = next((g for g in self.__groups if g.name == "Упаковка"), None)
+
+        kg = next((u for u in self.__ranges if u.name == "кг"), self.__ranges[1])
+        piece = next((u for u in self.__ranges if u.name == "штука"), self.__ranges[4])
+
+        flour = nomenclature_model.create_flour(group_raw, kg)
+        sugar = nomenclature_model.create_sugar(group_raw, kg)
+        butter = nomenclature_model.create_butter(group_ing, kg)
+        egg = nomenclature_model.create_egg(group_ing, piece)
+
+        items = [flour, sugar, butter, egg]
+
+        if group_semi:
+            items.append(nomenclature_model.create_dough(group_semi, kg))
+        if group_prod:
+            items.append(nomenclature_model.create_cookie(group_prod, piece))
+        if group_pkg:
+            items.append(nomenclature_model.create_packaging_box(group_pkg, piece))
+
+        for item in items:
+            self.add_nomenclature(item)
+
+    """
+    Генерация рецептов (технологических карт) согласно docs/recipe.md
+    """
+    def __init_recipes(self) -> None:
+        flour = next((n for n in self.__nomenclatures if n.name == "Мука"), None)
+        sugar = next((n for n in self.__nomenclatures if n.name == "Сахар"), None)
+        butter = next((n for n in self.__nomenclatures if n.name == "Масло"), None)
+        egg = next((n for n in self.__nomenclatures if n.name == "Яйцо"), None)
+        dough_nom = next((n for n in self.__nomenclatures if n.name == "Песочное тесто"), None)
+        cookie_nom = next((n for n in self.__nomenclatures if n.name == "Печенье Ромашка"), None)
+        box_nom = next((n for n in self.__nomenclatures if n.name == "Коробка"), None)
+
+        if not all([flour, sugar, butter, egg, dough_nom, cookie_nom, box_nom]):
             return
 
-        group_raw = self.__groups[0]          # Сырье
-        group_ing = self.__groups[1]          # Ингредиенты
+        # 1. Рецепт полуфабриката "Песочное тесто"
+        dough_recipe = recipe_model.create_dough_recipe(dough_nom, flour, butter, sugar, egg)
+        self.add_recipe(dough_recipe)
 
-        kg = self.__ranges[1]                 # кг
-        piece = self.__ranges[4]              # штука
-
-        flour = nomenclature_model(
-            name="Мука",
-            full_name="Мука пшеничная высший сорт ГОСТ",
-            group=group_raw,
-            range_unit=kg,
-        )
-
-        sugar = nomenclature_model(
-            name="Сахар",
-            full_name="Сахар белый свекловичный ГОСТ",
-            group=group_raw,
-            range_unit=kg,
-        )
-
-        butter = nomenclature_model(
-            name="Масло",
-            full_name="Масло сливочное 82.5% ГОСТ",
-            group=group_ing,
-            range_unit=kg,
-        )
-
-        egg = nomenclature_model(
-            name="Яйцо",
-            full_name="Яйцо куриное столовое С0",
-            group=group_ing,
-            range_unit=piece,
-        )
-
-        for item in [flour, sugar, butter, egg]:
-            self.add_nomenclature(item)
+        # 2. Рецепт готового блюда с полуфабрикатом и упаковкой
+        cookie_recipe = recipe_model.create_cookie_recipe(cookie_nom, dough_nom, dough_recipe, box_nom)
+        self.add_recipe(cookie_recipe)
