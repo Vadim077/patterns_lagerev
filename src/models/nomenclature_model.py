@@ -84,3 +84,87 @@ class nomenclature_model(entity_model):
                 message="Единица измерения должна быть объектом range_model",
             )
         self._range = value
+
+    """
+    Фабричный метод: Мука
+    """
+    @staticmethod
+    def create_flour(group: nomenclature_group_model, range_unit: range_model) -> "nomenclature_model":
+        return nomenclature_model(
+            name="Мука",
+            full_name="Мука пшеничная высший сорт ГОСТ",
+            group=group,
+            range_unit=range_unit,
+        )
+
+    """
+    Фабричный метод: Сахар
+    """
+    @staticmethod
+    def create_sugar(group: nomenclature_group_model, range_unit: range_model) -> "nomenclature_model":
+        return nomenclature_model(
+            name="Сахар",
+            full_name="Сахар белый свекловичный ГОСТ",
+            group=group,
+            range_unit=range_unit,
+        )
+
+    """
+    Фабричный метод: Масло
+    """
+    @staticmethod
+    def create_butter(group: nomenclature_group_model, range_unit: range_model) -> "nomenclature_model":
+        return nomenclature_model(
+            name="Масло",
+            full_name="Масло сливочное 82.5% ГОСТ",
+            group=group,
+            range_unit=range_unit,
+        )
+
+    """
+    Фабричный метод: Яйцо
+    """
+    @staticmethod
+    def create_egg(group: nomenclature_group_model, range_unit: range_model) -> "nomenclature_model":
+        return nomenclature_model(
+            name="Яйцо",
+            full_name="Яйцо куриное столовое С0",
+            group=group,
+            range_unit=range_unit,
+        )
+
+    """
+    Фабричный метод: Песочное тесто (полуфабрикат)
+    """
+    @staticmethod
+    def create_dough(group: nomenclature_group_model, range_unit: range_model) -> "nomenclature_model":
+        return nomenclature_model(
+            name="Песочное тесто",
+            full_name="Тесто песочное охлажденное полуфабрикат",
+            group=group,
+            range_unit=range_unit,
+        )
+
+    """
+    Фабричный метод: Песочное печенье «Ромашка» (готовое блюдо)
+    """
+    @staticmethod
+    def create_cookie(group: nomenclature_group_model, range_unit: range_model) -> "nomenclature_model":
+        return nomenclature_model(
+            name="Печенье Ромашка",
+            full_name="Песочное печенье «Ромашка» ГОСТ",
+            group=group,
+            range_unit=range_unit,
+        )
+
+    """
+    Фабричный метод: Картонная коробка (упаковка)
+    """
+    @staticmethod
+    def create_packaging_box(group: nomenclature_group_model, range_unit: range_model) -> "nomenclature_model":
+        return nomenclature_model(
+            name="Коробка",
+            full_name="Коробка картонная крафтовая для печенья",
+            group=group,
+            range_unit=range_unit,
+        )
