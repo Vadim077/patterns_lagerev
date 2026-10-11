@@ -28,7 +28,7 @@ def test_storage_manager_first_start_false_empty():
     assert len(manager.groups) == 0
     assert len(manager.storages) == 0
     assert len(manager.nomenclatures) == 0
-
+    assert len(manager.recipes) == 0
 
 def test_storage_manager_first_start_true_populates_data():
     """Тест 3: При is_first_start = True метод convert() генерирует первичные данные."""
@@ -45,7 +45,7 @@ def test_storage_manager_first_start_true_populates_data():
     assert len(manager.groups) >= 2
     assert len(manager.storages) >= 2
     assert len(manager.nomenclatures) >= 4
-
+    assert len(manager.recipes) >= 2
 
 def test_storage_manager_nomenclature_integrity():
     """Тест 4: Проверка корректности связей сформированных данных (единицы измерения и группы)."""
@@ -85,3 +85,24 @@ def test_storage_manager_elements_uniqueness():
     # Проверка
     assert added is False
     assert len(manager.ranges) == initial_count
+
+def test_storage_manager_recipes_first_start():
+    """Тест 6: При первом старте сформированы технологические карты (полуфабрикат и блюдо с упаковкой)."""
+    # Подготовка
+    settings = settings_model()
+    settings.is_first_start = True
+    manager = storage_manager(settings)
+
+    # Действие
+    dough_recipe = next((r for r in manager.recipes if "Песочное тесто" in r.name), None)
+    cookie_recipe = next((r for r in manager.recipes if "Песочное печенье" in r.name), None)
+
+    # Проверка
+    assert dough_recipe is not None
+    assert cookie_recipe is not None
+    assert dough_recipe.dish.name == "Песочное тесто"
+    assert cookie_recipe.dish.name == "Печенье Ромашка"
+    assert dough_recipe.brutto == 560.0
+    assert dough_recipe.netto == 550.0
+    assert cookie_recipe.brutto == 580.0
+    assert cookie_recipe.netto == 550.0
