@@ -9,6 +9,7 @@
   "boss_name": "Иванов Иван Иванович",
   "account_name": "Петрова Анна Сергеевна",
   "is_first_start": true,
+  "response_format": "Markdown",
   "database": {
     "host": "localhost",
     "port": "5432",
