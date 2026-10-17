@@ -51,6 +51,9 @@ class recipe_model(abstract_model):
     @property
     def rows(self) -> list:
         return self.__rows
+    @property
+    def items(self) -> list:
+        return self.__rows
 
     """
     Время приготовления в минутах
