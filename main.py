@@ -27,23 +27,9 @@ except Exception:
 
 
 def _find_entity(entity_type: str, entity_id: str):
-    """Поиск сущности в storage_manager по типу и коду (ID)."""
-    t = str(entity_type).strip().lower()
-    eid = str(entity_id).strip()
+    """Делегирование поиска сущности в storage_manager"""
+    return storage_mgr.find_by_id(entity_type, entity_id)
 
-    if t in ("recipe", "recipes", "рецепт", "рецепты"):
-        for item in storage_mgr.recipes:
-            if item.unique_code == eid or item.id == eid:
-                return item
-    elif t in ("nomenclature", "nomenclatures", "номенклатура"):
-        for item in storage_mgr.nomenclatures:
-            if item.unique_code == eid or item.id == eid:
-                return item
-    elif t in ("range", "ranges", "единица", "единицы", "единица_измерения"):
-        for item in storage_mgr.ranges:
-            if item.unique_code == eid or item.id == eid:
-                return item
-    return None
 
 
 def _create_report_response(report_instance, report_type: report_type_enum, entity, entity_type: str, entity_id: str):

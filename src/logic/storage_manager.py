@@ -129,6 +129,50 @@ class storage_manager(abstract_manager):
         return self.__append_unique(self.__recipes, item)
 
     """
+    Поиск сущности в хранилище по её типу и уникальному коду (ID)
+    Инкапсулирует логику доступа к коллекциям
+    """
+    def find_by_id(self, entity_type: str, entity_id: str) -> object:
+        if not entity_type or not entity_id:
+            return None
+
+        t = str(entity_type).strip().lower()
+        eid = str(entity_id).strip()
+
+        collections_map = {
+            "recipe": self.__recipes,
+            "recipes": self.__recipes,
+            "рецепт": self.__recipes,
+            "рецепты": self.__recipes,
+            "nomenclature": self.__nomenclatures,
+            "nomenclatures": self.__nomenclatures,
+            "номенклатура": self.__nomenclatures,
+            "range": self.__ranges,
+            "ranges": self.__ranges,
+            "единица": self.__ranges,
+            "единицы": self.__ranges,
+            "единица_измерения": self.__ranges,
+            "storage": self.__storages,
+            "storages": self.__storages,
+            "склад": self.__storages,
+            "склады": self.__storages,
+            "group": self.__groups,
+            "groups": self.__groups,
+            "группа": self.__groups,
+            "группы": self.__groups,
+        }
+
+        target_collection = collections_map.get(t)
+        if not target_collection:
+            return None
+
+        for item in target_collection:
+            if getattr(item, "id", None) == eid or getattr(item, "unique_code", None) == eid:
+                return item
+
+        return None
+
+    """
     Переопределенный метод обработки данных
     При первом старте (is_first_start == True) формирует первичные данные
     """
