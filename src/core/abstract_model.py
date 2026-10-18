@@ -25,10 +25,6 @@ class name_id(ABC):
         """Получить id."""
         return self._id
 
-    @property
-    def unique_code(self) -> str:
-        return self._id
-
     @id.setter
     def id(self, value: str) -> None:
         """Установить id вручную с валидацией."""

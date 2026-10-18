@@ -117,19 +117,19 @@ def test_storage_manager_find_by_id():
 
     # Действие и Проверка: поиск рецепта
     recipe = manager.recipes[0]
-    found_recipe = manager.find_by_id("recipe", recipe.unique_code)
+    found_recipe = manager.find_by_id("recipe", recipe.id)
     assert found_recipe is not None
     assert found_recipe.id == recipe.id
 
     # Действие и Проверка: поиск номенклатуры (по русскому названию типа)
     nom = manager.nomenclatures[0]
-    found_nom = manager.find_by_id("номенклатура", nom.unique_code)
+    found_nom = manager.find_by_id("номенклатура", nom.id)
     assert found_nom is not None
     assert found_nom.id == nom.id
 
     # Действие и Проверка: поиск единицы измерения
     unit = manager.ranges[0]
-    found_unit = manager.find_by_id("range", unit.unique_code)
+    found_unit = manager.find_by_id("range", unit.id)
     assert found_unit is not None
     assert found_unit.id == unit.id
 
@@ -137,7 +137,7 @@ def test_storage_manager_find_by_id():
     assert manager.find_by_id("recipe", "non-existent-id") is None
 
     # Неизвестный тип
-    assert manager.find_by_id("unknown_type", recipe.unique_code) is None
+    assert manager.find_by_id("unknown_type", recipe.id) is None
 
     # Пустые параметры
     assert manager.find_by_id("", "") is None

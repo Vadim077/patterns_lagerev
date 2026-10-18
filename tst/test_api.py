@@ -32,13 +32,14 @@ def test_api_get_report_by_format_txt(client):
     recipe = storage_mgr.recipes[0]
 
     # Действие
-    response = client.get(f"/api/report/txt/recipe/{recipe.unique_code}")
+    response = client.get(f"/api/report/txt/recipe/{recipe.id}")
 
     # Проверка
     assert response.status_code == 200
     assert "text/plain" in response.content_type
     text_content = response.get_data(as_text=True)
-    assert "Код | Наименование | Брутто | Нетто" in text_content
+    assert f"=== Отчет: {recipe.name} ===" in text_content
+    assert recipe.id in text_content
 
 
 def test_api_get_report_by_format_csv_download(client):
@@ -47,14 +48,16 @@ def test_api_get_report_by_format_csv_download(client):
     recipe = storage_mgr.recipes[0]
 
     # Действие
-    response = client.get(f"/api/report/csv/recipe/{recipe.unique_code}")
+    response = client.get(f"/api/report/csv/recipe/{recipe.id}")
 
     # Проверка
     assert response.status_code == 200
     assert "text/csv" in response.content_type
     assert "attachment" in response.headers.get("Content-Disposition", "")
     assert ".csv" in response.headers.get("Content-Disposition", "")
-    assert "Код;Наименование;Брутто;Нетто" in response.get_data(as_text=True)
+    decoded_text = response.get_data(as_text=True)
+    assert "field;value" in decoded_text
+    assert recipe.name in decoded_text
 
 
 def test_api_get_report_by_format_markdown_download(client):
@@ -63,14 +66,15 @@ def test_api_get_report_by_format_markdown_download(client):
     recipe = storage_mgr.recipes[0]
 
     # Действие
-    response = client.get(f"/api/report/markdown/recipe/{recipe.unique_code}")
+    response = client.get(f"/api/report/markdown/recipe/{recipe.id}")
 
     # Проверка
     assert response.status_code == 200
     assert "text/markdown" in response.content_type
     assert "attachment" in response.headers.get("Content-Disposition", "")
     assert ".md" in response.headers.get("Content-Disposition", "")
-    assert "| Код | Наименование | Брутто | Нетто |" in response.get_data(as_text=True)
+    decoded_text = response.get_data(as_text=True)
+    assert f"# {recipe.name}" in decoded_text
 
 
 def test_api_get_report_by_format_xml(client):
@@ -79,14 +83,15 @@ def test_api_get_report_by_format_xml(client):
     nom = storage_mgr.nomenclatures[0]
 
     # Действие
-    response = client.get(f"/api/report/xml/nomenclature/{nom.unique_code}")
+    response = client.get(f"/api/report/xml/nomenclature/{nom.id}")
 
     # Проверка
     assert response.status_code == 200
     assert "application/xml" in response.content_type
     xml_content = response.get_data(as_text=True)
     assert "<?xml" in xml_content
-    assert f'<nomenclature id="{nom.unique_code}"' in xml_content
+    assert f"<id>{nom.id}</id>" in xml_content
+    assert f"<name>{nom.name}</name>" in xml_content
 
 
 def test_api_get_report_by_format_html(client):
@@ -95,14 +100,14 @@ def test_api_get_report_by_format_html(client):
     rg = storage_mgr.ranges[0]
 
     # Действие
-    response = client.get(f"/api/report/html/range/{rg.unique_code}")
+    response = client.get(f"/api/report/html/range/{rg.id}")
 
     # Проверка
     assert response.status_code == 200
     assert "text/html" in response.content_type
     html_content = response.get_data(as_text=True)
     assert "<!DOCTYPE html>" in html_content
-    assert f"<h2>Единица измерения: {rg.name}</h2>" in html_content
+    assert f"<h2>Отчет: {rg.name}</h2>" in html_content
 
 
 def test_api_get_report_default(client):
@@ -111,7 +116,7 @@ def test_api_get_report_default(client):
     recipe = storage_mgr.recipes[0]
 
     # Действие
-    response = client.get(f"/api/report/default/recipe/{recipe.unique_code}")
+    response = client.get(f"/api/report/default/recipe/{recipe.id}")
 
     # Проверка
     assert response.status_code == 200
@@ -125,7 +130,7 @@ def test_api_get_report_query_params(client):
     recipe = storage_mgr.recipes[0]
 
     # Действие
-    response = client.get(f"/api/get_report?format=html&type=recipe&id={recipe.unique_code}")
+    response = client.get(f"/api/get_report?format=html&type=recipe&id={recipe.id}")
 
     # Проверка
     assert response.status_code == 200

@@ -1,37 +1,56 @@
 from src.core.abstract_report import abstract_report
 from src.core.abstract_model import abstract_model
-from src.core.validator import validator, arguments_exception
+from src.core.validator import validator
 from src.dtos.report_result_dto import report_result_dto
-from src.models.recipe_model import recipe_model
-from src.models.nomenclature_model import nomenclature_model
-from src.models.range_model import range_model
 
-"""
-Формирование отчета в формате Markdown (бинарный вывод для скачивания)
-"""
+
 class markdown_report(abstract_report):
+    """Формирование отчета в формате Markdown с использованием рефлексии."""
+
+    @property
+    def mimetype(self) -> str:
+        return "text/markdown; charset=utf-8"
+
+    @property
+    def is_binary(self) -> bool:
+        return True
+
+    @property
+    def file_extension(self) -> str:
+        return "md"
 
     def build(self, source: abstract_model) -> report_result_dto:
-        validator.validate(source)
+        validator.validate(source, abstract_model)
 
-        if isinstance(source, recipe_model):
-            header = "| Код | Наименование | Брутто | Нетто |\n| --- | --- | --- | --- |\n"
-            rows = [f"| {item.unique_code} | {item.name} | {item.brutto} | {item.netto} |" for item in source.items]
-            content = header + "\n".join(rows)
-        elif isinstance(source, nomenclature_model):
-            header = "| Код | Наименование | Полное наименование | Группа | Единица измерения |\n| --- | --- | --- | --- | --- |\n"
-            group_name = source.group.name if getattr(source, "group", None) else ""
-            range_name = source.range.name if getattr(source, "range", None) else ""
-            row = f"| {source.unique_code} | {source.name} | {source.full_name} | {group_name} | {range_name} |"
-            content = header + row
-        elif isinstance(source, range_model):
-            header = "| Код | Наименование | Коэффициент | Базовая единица |\n| --- | --- | --- | --- |\n"
-            base_name = source.base_range.name if getattr(source, "base_range", None) else ""
-            row = f"| {source.unique_code} | {source.name} | {source.conversion_factor} | {base_name} |"
-            content = header + row
-        else:
-            raise arguments_exception(field="source", message="Неподдерживаемый тип модели для формирования отчета")
+        lines = [f"# {source.name}", ""]
+        lines.extend(self._object_lines(source, level=0))
+        content = "\n".join(lines) + "\n"
 
         result = report_result_dto()
         result.binary = list(content.encode("utf-8"))
         return result
+
+    def _object_lines(self, source: object, level: int) -> list[str]:
+        indent = "  " * level
+        lines = []
+        for field, value in self._fields(source):
+            if self._is_reference(value):
+                lines.append(f"{indent}- **{field}**: {self._format_reference(value)}")
+            elif self._is_scalar(value):
+                lines.append(f"{indent}- **{field}**: {self._format_scalar(value)}")
+            elif self._is_collection(value):
+                lines.append(f"{indent}- **{field}**:")
+                for idx, item in enumerate(value, start=1):
+                    item_indent = "  " * (level + 1)
+                    if self._is_reference(item):
+                        lines.append(f"{item_indent}{idx}. {self._format_reference(item)}")
+                    elif self._is_scalar(item):
+                        lines.append(f"{item_indent}{idx}. {self._format_scalar(item)}")
+                    else:
+                        sub_lines = self._object_lines(item, level + 2)
+                        lines.append(f"{item_indent}{idx}.")
+                        lines.extend(sub_lines)
+            else:
+                lines.append(f"{indent}- **{field}**:")
+                lines.extend(self._object_lines(value, level + 1))
+        return lines

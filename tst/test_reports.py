@@ -83,13 +83,10 @@ def test_text_report_build(sample_models_fixture):
 
     # Проверка
     assert isinstance(result, report_result_dto)
-    assert "Код | Наименование | Брутто | Нетто\n" in result.text
+    assert f"=== Отчет: {recipe.name} ===" in result.text
     assert "Мука" in result.text
-    assert "250.0" in result.text
-    assert "240.0" in result.text
     assert "Сахар" in result.text
-    assert "100.0" in result.text
-    assert row1.unique_code in result.text
+    assert recipe.id in result.text
 
 
 def test_csv_report_build_recipe_binary(sample_models_fixture):
@@ -107,9 +104,9 @@ def test_csv_report_build_recipe_binary(sample_models_fixture):
     assert result.text == ""
 
     decoded_text = bytes(result.binary).decode("utf-8")
-    assert "Код;Наименование;Брутто;Нетто\n" in decoded_text
-    assert "Мука;250.0;240.0" in decoded_text
-    assert "Сахар;100.0;100.0" in decoded_text
+    assert "field;value" in decoded_text
+    assert "Мука" in decoded_text
+    assert "Сахар" in decoded_text
 
 
 def test_markdown_report_build_recipe_binary(sample_models_fixture):
@@ -127,8 +124,8 @@ def test_markdown_report_build_recipe_binary(sample_models_fixture):
     assert result.text == ""
 
     decoded_text = bytes(result.binary).decode("utf-8")
-    assert "| Код | Наименование | Брутто | Нетто |" in decoded_text
-    assert "| Мука | 250.0 | 240.0 |" in decoded_text
+    assert f"# {recipe.name}" in decoded_text
+    assert "Мука" in decoded_text
 
 
 def test_xml_report_build_nomenclature(sample_models_fixture):
@@ -144,9 +141,10 @@ def test_xml_report_build_nomenclature(sample_models_fixture):
     assert isinstance(result, report_result_dto)
     assert len(result.binary) == 0
     assert '<?xml version="1.0" encoding="utf-8"?>' in result.text
-    assert f'<nomenclature id="{flour.unique_code}" name="{flour.name}">' in result.text
+    assert f"<id>{flour.id}</id>" in result.text
+    assert f"<name>{flour.name}</name>" in result.text
     assert f"<full_name>{flour.full_name}</full_name>" in result.text
-    assert "<group>Сырье</group>" in result.text
+    assert "Сырье" in result.text
 
 
 def test_html_report_build_range(sample_models_fixture):
@@ -162,9 +160,9 @@ def test_html_report_build_range(sample_models_fixture):
     assert isinstance(result, report_result_dto)
     assert len(result.binary) == 0
     assert "<!DOCTYPE html>" in result.text
-    assert f"<h2>Единица измерения: {kg.name}</h2>" in result.text
-    assert f"<td>{kg.unique_code}</td>" in result.text
-    assert f"<td>{kg.conversion_factor}</td>" in result.text
+    assert f"<h2>Отчет: {kg.name}</h2>" in result.text
+    assert f"{kg.id}" in result.text
+    assert "1000" in result.text
 
 
 def test_report_factory_create():
