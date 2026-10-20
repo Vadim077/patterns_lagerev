@@ -106,3 +106,39 @@ def test_storage_manager_recipes_first_start():
     assert dough_recipe.netto == 550.0
     assert cookie_recipe.brutto == 580.0
     assert cookie_recipe.netto == 550.0
+
+
+def test_storage_manager_find_by_id():
+    """Тест 7: Метод find_by_id корректно находит сущности разных типов по ID и возвращает None при отсутствии."""
+    # Подготовка
+    settings = settings_model()
+    settings.is_first_start = True
+    manager = storage_manager(settings)
+
+    # Действие и Проверка: поиск рецепта
+    recipe = manager.recipes[0]
+    found_recipe = manager.find_by_id("recipe", recipe.id)
+    assert found_recipe is not None
+    assert found_recipe.id == recipe.id
+
+    # Действие и Проверка: поиск номенклатуры (по русскому названию типа)
+    nom = manager.nomenclatures[0]
+    found_nom = manager.find_by_id("номенклатура", nom.id)
+    assert found_nom is not None
+    assert found_nom.id == nom.id
+
+    # Действие и Проверка: поиск единицы измерения
+    unit = manager.ranges[0]
+    found_unit = manager.find_by_id("range", unit.id)
+    assert found_unit is not None
+    assert found_unit.id == unit.id
+
+    # Несуществующий ID
+    assert manager.find_by_id("recipe", "non-existent-id") is None
+
+    # Неизвестный тип
+    assert manager.find_by_id("unknown_type", recipe.id) is None
+
+    # Пустые параметры
+    assert manager.find_by_id("", "") is None
+    assert manager.find_by_id(None, None) is None

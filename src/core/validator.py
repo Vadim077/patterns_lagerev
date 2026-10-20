@@ -22,13 +22,21 @@ class validator:
     """Утилитный класс для централизованной проверки параметров."""
 
     @staticmethod
-    def validate(value: object, field: str = "argument") -> bool:
+    def validate(value: object, field_or_type: object = "argument") -> bool:
         """
-        Проверить значение на корректность.
-        Если пустое или пробельное — выбрасывает arguments_exception.
+        Проверить значение на корректность и тип.
         """
         if value is None:
-            raise arguments_exception(field=field, message="Значение не может быть пустым")
+            raise arguments_exception(field=str(field_or_type), message="Значение не может быть пустым")
+        
+        # Если передан ожидаемый тип (например, str, list, recipe_model)
+        if isinstance(field_or_type, type):
+            if not isinstance(value, field_or_type):
+                raise arguments_exception(
+                    field=field_or_type.__name__,
+                    message=f"Некорректный тип: ожидается {field_or_type.__name__}, получен {type(value).__name__}",
+                )
+        
         if isinstance(value, str) and not value.strip():
-            raise arguments_exception(field=field, message="Строка не может быть пустой")
+            raise arguments_exception(field=str(field_or_type), message="Строка не может быть пустой")
         return True

@@ -55,6 +55,9 @@ class settings_manager(abstract_manager):
         if "is_first_start" in self.__data:
             self.__settings.is_first_start = bool(self.__data["is_first_start"])
 
+        if "response_format" in self.__data:
+            self.__settings.response_format = self.__data["response_format"]
+
         if "company" in self.__data and isinstance(self.__data["company"], dict):
             comp = self.__data["company"]
             org = organization_model()
