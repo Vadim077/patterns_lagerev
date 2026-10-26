@@ -1,27 +1,30 @@
-from datetime import date, datetime
+from typing import Optional, TYPE_CHECKING
 from src.core.abstract_convertor import abstract_convertor
 from src.core.abstract_model import abstract_model
 from src.core.validator import validator
 
+if TYPE_CHECKING:
+    from src.logic.convert_factory import convert_factory
+
 
 class reference_convertor(abstract_convertor):
     """
-    Конвертор ссылочных типов
+    Конвертор ссылочных типов:
     - Вложенные доменные модели
     - Списки, содержащие доменные модели
-    - Защита от бесконечной рекурсии
+    - Защита от бесконечной рекурсии при циклических ссылках
     """
 
-    def __init__(self, factory=None) -> None:
+    def __init__(self, factory: Optional["convert_factory"] = None) -> None:
         self.__factory = factory
         self.__visited = set()
 
     @property
-    def factory(self):
+    def factory(self) -> Optional["convert_factory"]:
         return self.__factory
 
     @factory.setter
-    def factory(self, value):
+    def factory(self, value: Optional["convert_factory"]) -> None:
         self.__factory = value
 
     def convert(self, source: object) -> dict:
@@ -41,7 +44,10 @@ class reference_convertor(abstract_convertor):
 
                 # 2. Если свойство - вложенная доменная модель (range_model)
                 elif isinstance(val, abstract_model):
-                    result[field] = self._convert_item(val)
+                    if val == source or id(val) in self.__visited:
+                        result[field] = None
+                    else:
+                        result[field] = self._convert_item(val)
         finally:
             self.__visited.discard(source_id)
 
@@ -49,33 +55,18 @@ class reference_convertor(abstract_convertor):
 
     def _convert_item(self, item: object) -> object:
         """
-        Рекурсивная конвертация элемента-ссылки
+        Рекурсивная конвертация элемента-ссылки через фабрику
         """
         if not isinstance(item, abstract_model):
             return item
 
         # Защита от бесконечного цикла
         if id(item) in self.__visited:
-            return getattr(item, "id", str(item))
+            return None
 
-        # Если задана фабрика - используем её для сквозной конвертации
         if self.__factory is not None:
             return self.__factory.convert(item)
 
-        # Автономная конвертация модели со сбором полей
-        self.__visited.add(id(item))
-        try:
-            res = {}
-            for f in self.get_fields(item):
-                v = getattr(item, f)
-                if isinstance(v, (int, float, str, bool)):
-                    res[f] = v
-                elif isinstance(v, (datetime, date)):
-                    res[f] = v.isoformat()
-                elif isinstance(v, abstract_model):
-                    res[f] = self._convert_item(v)
-                elif isinstance(v, (list, tuple)):
-                    res[f] = [self._convert_item(x) for x in v]
-            return res
-        finally:
-            self.__visited.discard(id(item))
+        # Если фабрика не была передана, используем дефолтную фабрику
+        from src.logic.convert_factory import convert_factory
+        return convert_factory().convert(item)
