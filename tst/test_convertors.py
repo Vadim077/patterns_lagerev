@@ -73,7 +73,7 @@ def test_basic_convertor_numeric_and_strings(sample_data):
 
 
 def test_basic_convertor_skips_references(sample_data):
-    """Тест 2 (basic_convertor): Ссылочные свойства пропускабтся базовым конвертором"""
+    """Тест 2 (basic_convertor): Ссылочные свойства пропускаются базовым конвертором"""
     # Подготовка
     flour = sample_data["flour"]
     convertor = basic_convertor()
@@ -116,9 +116,9 @@ def test_datetime_convertor_no_dates_returns_empty(sample_data):
     assert result == {}
 
 
-# 3. Тесты для reference_convertor
-def test_reference_convertor_extracts_ids(sample_data):
-    """Тест 5 (reference_convertor): Свойства-ссылки преобразуются в id связанных сущностей"""
+# 3. Тесты для reference_convertor (с глубокой сериализацией)
+def test_reference_convertor_extracts_nested_models(sample_data):
+    """Тест 5 (reference_convertor): Свойства-ссылки преобразуются во вложенные словари"""
     # Подготовка
     flour = sample_data["flour"]
     convertor = reference_convertor()
@@ -127,14 +127,33 @@ def test_reference_convertor_extracts_ids(sample_data):
     result = convertor.convert(flour)
 
     # Проверка
-    assert result["group"] == sample_data["group"].id
-    assert result["range"] == sample_data["kg"].id
-    assert "name" not in result
-    assert "id" not in result
+    assert isinstance(result["group"], dict)
+    assert result["group"]["id"] == sample_data["group"].id
+    assert result["group"]["name"] == sample_data["group"].name
+
+    assert isinstance(result["range"], dict)
+    assert result["range"]["id"] == sample_data["kg"].id
+    assert result["range"]["name"] == "кг"
+
+
+def test_reference_convertor_handles_lists(sample_data):
+    """Тест 6 (reference_convertor): Списки доменных моделей преобразуются в списки словарей"""
+    # Подготовка
+    recipe = sample_data["recipe"]
+    convertor = reference_convertor()
+
+    # Действие
+    result = convertor.convert(recipe)
+
+    # Проверка
+    assert isinstance(result["rows"], list)
+    assert len(result["rows"]) == 2
+    assert isinstance(result["rows"][0], dict)
+    assert isinstance(result["rows"][0]["nomenclature"], dict)
 
 
 def test_reference_convertor_no_references_returns_empty():
-    """Тест 6 (reference_convertor): При отсутствии ссылок возвращается пустой словарь"""
+    """Тест 7 (reference_convertor): При отсутствии ссылок возвращается пустой словарь"""
     # Подготовка
     group = nomenclature_group_model(name="Сырье")
     convertor = reference_convertor()
@@ -152,7 +171,7 @@ def test_reference_convertor_no_references_returns_empty():
     [basic_convertor(), datetime_convertor(), reference_convertor(), convert_factory()],
 )
 def test_convertors_none_raises_arguments_exception(convertor_instance):
-    """Тест 7: Передача None вызывает arguments_exception во всех конверторах и фабрике"""
+    """Тест 8: Передача None вызывает arguments_exception во всех конверторах и фабрике"""
     # Подготовка
     invalid_source = None
 
@@ -161,10 +180,21 @@ def test_convertors_none_raises_arguments_exception(convertor_instance):
         convertor_instance.convert(invalid_source)
 
 
-
 # 5. Тесты для convert_factory
+def test_convert_factory_create_picks_correct_convertor():
+    """Тест 9 (convert_factory.create): Фабрика подбирает нужный конвертор по типу"""
+    # Подготовка
+    factory = convert_factory()
+
+    # Действие и Проверка
+    assert isinstance(factory.create(123), basic_convertor)
+    assert isinstance(factory.create("строка"), basic_convertor)
+    assert isinstance(factory.create(datetime.now()), datetime_convertor)
+    assert isinstance(factory.create(nomenclature_group_model(name="Тест")), reference_convertor)
+
+
 def test_convert_factory_merges_all_convertors(sample_data):
-    """Тест 8 (convert_factory): Фабрика объединяет базовые свойства и ссылки в единый словарь"""
+    """Тест 10 (convert_factory): Фабрика объединяет базовые свойства и вложенные модели"""
     # Подготовка
     flour = sample_data["flour"]
     factory = convert_factory()
@@ -176,12 +206,14 @@ def test_convert_factory_merges_all_convertors(sample_data):
     assert result["id"] == flour.id
     assert result["name"] == flour.name
     assert result["full_name"] == flour.full_name
-    assert result["group"] == sample_data["group"].id
-    assert result["range"] == sample_data["kg"].id
+    assert isinstance(result["group"], dict)
+    assert result["group"]["name"] == "Сырье"
+    assert isinstance(result["range"], dict)
+    assert result["range"]["name"] == "кг"
 
 
 def test_convert_factory_list_of_objects(sample_data):
-    """Тест 9 (convert_factory): Список моделей конвертируется в список словарей"""
+    """Тест 11 (convert_factory): Список моделей конвертируется в список словарей"""
     # Подготовка
     items = [sample_data["flour"], sample_data["sugar"]]
     factory = convert_factory()
@@ -197,7 +229,7 @@ def test_convert_factory_list_of_objects(sample_data):
 
 
 def test_convert_factory_dict_and_datetime_support():
-    """Тест 10 (convert_factory): Поддержка словарей и дат"""
+    """Тест 12 (convert_factory): Поддержка словарей и дат"""
     # Подготовка
     data = {
         "event": dated_stub(),
@@ -215,7 +247,7 @@ def test_convert_factory_dict_and_datetime_support():
 
 
 def test_convert_factory_composite_recipe_with_nested_rows(sample_data):
-    """Тест 11 (convert_factory): Полная сериализация составного рецепта с ингредиентами"""
+    """Тест 13 (convert_factory): Полная сериализация составного рецепта с ингредиентами"""
     # Подготовка
     recipe = sample_data["recipe"]
     factory = convert_factory()
@@ -225,18 +257,19 @@ def test_convert_factory_composite_recipe_with_nested_rows(sample_data):
 
     # Проверка
     assert result["name"] == "Песочное тесто"
-    assert result["dish"] == sample_data["flour"].id
+    assert isinstance(result["dish"], dict)
+    assert result["dish"]["name"] == "Мука"
     assert result["brutto"] == 350.0
     assert result["netto"] == 340.0
     assert isinstance(result["rows"], list)
     assert len(result["rows"]) == 2
-    assert result["rows"][0]["nomenclature"] == sample_data["flour"].id
+    assert isinstance(result["rows"][0]["nomenclature"], dict)
+    assert result["rows"][0]["nomenclature"]["name"] == "Мука"
     assert result["rows"][0]["brutto"] == 250.0
 
 
 def test_storage_manager_json_dump():
-    """Тест 12: Выгрузка всех коллекций storage_manager в JSON"""
-
+    """Тест 14: Выгрузка всех коллекций storage_manager в JSON"""
     # Подготовка
     settings = settings_model()
     settings.is_first_start = True
