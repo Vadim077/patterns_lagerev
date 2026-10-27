@@ -7,7 +7,8 @@ from src.models import (
     nomenclature_model,
     recipe_model,
 )
-
+import json
+from src.logic.convert_factory import convert_factory
 
 """
 Центральное хранилище данных приложения (Singleton)
@@ -286,3 +287,22 @@ class storage_manager(abstract_manager):
         # 2. Рецепт готового блюда с полуфабрикатом и упаковкой
         cookie_recipe = recipe_model.create_cookie_recipe(cookie_nom, dough_nom, dough_recipe, box_nom)
         self.add_recipe(cookie_recipe)
+
+    """
+    Экспорт всех данных хранилища в JSON с использованием convert_factory
+    """
+    def save_json(self, file_path: str = "storage_dump.json") -> str:
+
+        factory = convert_factory()
+        data = {
+            "ranges": factory.convert(self.ranges),
+            "groups": factory.convert(self.groups),
+            "storages": factory.convert(self.storages),
+            "nomenclatures": factory.convert(self.nomenclatures),
+            "recipes": factory.convert(self.recipes),
+        }
+
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+
+        return file_path
