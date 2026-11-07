@@ -9,6 +9,7 @@ from src.models import (
 )
 import json
 from src.logic.convert_factory import convert_factory
+from src.logic.deserialize_factory import deserialize_factory
 
 """
 Центральное хранилище данных приложения (Singleton)
@@ -39,6 +40,29 @@ class storage_manager(abstract_manager):
         if settings is not None:
             self.__settings = settings
             self.convert()
+
+    """
+    Ключи коллекций хранилища для сериализации и десериализации
+    """
+    @staticmethod
+    def range_key() -> str:
+        return "ranges"
+
+    @staticmethod
+    def group_key() -> str:
+        return "groups"
+
+    @staticmethod
+    def storage_key() -> str:
+        return "storages"
+
+    @staticmethod
+    def nomenclature_key() -> str:
+        return "nomenclatures"
+
+    @staticmethod
+    def recipe_key() -> str:
+        return "recipes"
 
     """
     Получить текущие настройки
@@ -292,17 +316,50 @@ class storage_manager(abstract_manager):
     Экспорт всех данных хранилища в JSON с использованием convert_factory
     """
     def save_json(self, file_path: str = "storage_dump.json") -> str:
-
         factory = convert_factory()
         data = {
-            "ranges": factory.convert(self.ranges),
-            "groups": factory.convert(self.groups),
-            "storages": factory.convert(self.storages),
-            "nomenclatures": factory.convert(self.nomenclatures),
-            "recipes": factory.convert(self.recipes),
+            self.range_key(): factory.convert(self.ranges),
+            self.group_key(): factory.convert(self.groups),
+            self.storage_key(): factory.convert(self.storages),
+            self.nomenclature_key(): factory.convert(self.nomenclatures),
+            self.recipe_key(): factory.convert(self.recipes),
         }
 
         with open(file_path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
 
         return file_path
+
+    """
+    Загрузка и восстановление всех данных хранилища из JSON с использованием deserialize_factory
+    """
+    def load_json(self, file_path: str = "storage_dump.json", replace: bool = True) -> bool:
+        if replace:
+            self.__ranges.clear()
+            self.__groups.clear()
+            self.__storages.clear()
+            self.__nomenclatures.clear()
+            self.__recipes.clear()
+
+        factory = deserialize_factory()
+        data = factory.deserialize_file(file_path)
+
+        if not isinstance(data, dict):
+            return False
+
+        for unit in data.get(self.range_key(), []):
+            self.add_range(unit)
+
+        for group in data.get(self.group_key(), []):
+            self.add_group(group)
+
+        for storage in data.get(self.storage_key(), []):
+            self.add_storage(storage)
+
+        for nom in data.get(self.nomenclature_key(), []):
+            self.add_nomenclature(nom)
+
+        for recipe in data.get(self.recipe_key(), []):
+            self.add_recipe(recipe)
+
+        return True
