@@ -1,41 +1,41 @@
 {
   "ranges": [
     {
-      "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+      "id": "bea75b9e-340b-4543-8f55-5334eda69881",
       "name": "грамм",
       "conversion_factor": 1.0,
       "base_range": null
     },
     {
-      "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+      "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
       "name": "кг",
       "conversion_factor": 1000.0,
       "base_range": {
-        "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+        "id": "bea75b9e-340b-4543-8f55-5334eda69881",
         "name": "грамм",
         "conversion_factor": 1.0,
         "base_range": null
       }
     },
     {
-      "id": "6598c730-c4ed-4bd5-b7ab-bb9c51d3d715",
+      "id": "1a7dc7fe-126a-429e-92ea-b5d173117c2f",
       "name": "миллилитр",
       "conversion_factor": 1.0,
       "base_range": null
     },
     {
-      "id": "f2777490-bb8e-4ba5-ab5c-84dc816d5a52",
+      "id": "ff1e8128-c8fe-44cf-92db-852ff334e53d",
       "name": "литр",
       "conversion_factor": 1000.0,
       "base_range": {
-        "id": "6598c730-c4ed-4bd5-b7ab-bb9c51d3d715",
+        "id": "1a7dc7fe-126a-429e-92ea-b5d173117c2f",
         "name": "миллилитр",
         "conversion_factor": 1.0,
         "base_range": null
       }
     },
     {
-      "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+      "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
       "name": "штука",
       "conversion_factor": 1.0,
       "base_range": null
@@ -43,51 +43,51 @@
   ],
   "groups": [
     {
-      "id": "a2127b59-eee5-428e-b9f8-f7941f7af9a0",
+      "id": "839c3693-6fb8-41a3-b7a7-357ac7b1d733",
       "name": "Сырье"
     },
     {
-      "id": "7677566f-7de5-4873-92bc-1f1f03ca15f6",
+      "id": "e8da6c2c-37eb-43ec-ae05-ba901d762b78",
       "name": "Ингредиенты"
     },
     {
-      "id": "0599e632-c7ea-4931-8f8c-e30587949ce8",
+      "id": "45b4556a-34ff-4c8d-94ce-135abb1973a8",
       "name": "Полуфабрикаты"
     },
     {
-      "id": "cfecf89a-0fb2-44ac-a740-f8669523f28e",
+      "id": "4bd70309-2273-493e-9408-ef576dece801",
       "name": "Готовая продукция"
     },
     {
-      "id": "c8a9c91a-f0f9-4c7e-ace8-39b51be0d64e",
+      "id": "78f79979-6540-4087-9b76-9af541df5f51",
       "name": "Упаковка"
     }
   ],
   "storages": [
     {
-      "id": "2093e68a-37eb-44c1-95e7-2c3e7d2bdcdc",
+      "id": "7c4602b9-2d4f-4a05-b43b-f111d82a5253",
       "name": "Основной склад"
     },
     {
-      "id": "c87812de-3a09-4278-8485-3ff3591e1684",
+      "id": "fb748076-466a-423e-a69d-0ba4dbb0341b",
       "name": "Холодильник"
     }
   ],
   "nomenclatures": [
     {
-      "id": "24885cad-021b-4da3-965c-aa501211556e",
+      "id": "bbc947aa-8ff3-470b-b326-f7443c4d4cd3",
       "name": "Мука",
       "full_name": "Мука пшеничная высший сорт ГОСТ",
       "group": {
-        "id": "a2127b59-eee5-428e-b9f8-f7941f7af9a0",
+        "id": "839c3693-6fb8-41a3-b7a7-357ac7b1d733",
         "name": "Сырье"
       },
       "range": {
-        "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+        "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
         "name": "кг",
         "conversion_factor": 1000.0,
         "base_range": {
-          "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+          "id": "bea75b9e-340b-4543-8f55-5334eda69881",
           "name": "грамм",
           "conversion_factor": 1.0,
           "base_range": null
@@ -95,19 +95,19 @@
       }
     },
     {
-      "id": "a34258c4-5ac2-49e9-b0a3-d2312b1f8fc7",
+      "id": "54ff018c-6e71-4bcf-9fb4-68f02f01dfcb",
       "name": "Сахар",
       "full_name": "Сахар белый свекловичный ГОСТ",
       "group": {
-        "id": "a2127b59-eee5-428e-b9f8-f7941f7af9a0",
+        "id": "839c3693-6fb8-41a3-b7a7-357ac7b1d733",
         "name": "Сырье"
       },
       "range": {
-        "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+        "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
         "name": "кг",
         "conversion_factor": 1000.0,
         "base_range": {
-          "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+          "id": "bea75b9e-340b-4543-8f55-5334eda69881",
           "name": "грамм",
           "conversion_factor": 1.0,
           "base_range": null
@@ -115,19 +115,19 @@
       }
     },
     {
-      "id": "f31b383c-86e3-4701-a628-17e1818e1075",
+      "id": "8dcf636f-b4d3-428f-a1d4-496a52525520",
       "name": "Масло",
       "full_name": "Масло сливочное 82.5% ГОСТ",
       "group": {
-        "id": "7677566f-7de5-4873-92bc-1f1f03ca15f6",
+        "id": "e8da6c2c-37eb-43ec-ae05-ba901d762b78",
         "name": "Ингредиенты"
       },
       "range": {
-        "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+        "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
         "name": "кг",
         "conversion_factor": 1000.0,
         "base_range": {
-          "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+          "id": "bea75b9e-340b-4543-8f55-5334eda69881",
           "name": "грамм",
           "conversion_factor": 1.0,
           "base_range": null
@@ -135,34 +135,34 @@
       }
     },
     {
-      "id": "06913964-8b10-4b7a-8710-4ff6b5375a10",
+      "id": "20b9e781-3d7c-4be6-b6eb-55de8c51d814",
       "name": "Яйцо",
       "full_name": "Яйцо куриное столовое С0",
       "group": {
-        "id": "7677566f-7de5-4873-92bc-1f1f03ca15f6",
+        "id": "e8da6c2c-37eb-43ec-ae05-ba901d762b78",
         "name": "Ингредиенты"
       },
       "range": {
-        "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+        "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
         "name": "штука",
         "conversion_factor": 1.0,
         "base_range": null
       }
     },
     {
-      "id": "f7d87679-1300-4ec2-8fca-13e28bbd1b1e",
+      "id": "def38153-4cc9-44fd-8d82-4cc2c5c5902a",
       "name": "Песочное тесто",
       "full_name": "Тесто песочное охлажденное полуфабрикат",
       "group": {
-        "id": "0599e632-c7ea-4931-8f8c-e30587949ce8",
+        "id": "45b4556a-34ff-4c8d-94ce-135abb1973a8",
         "name": "Полуфабрикаты"
       },
       "range": {
-        "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+        "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
         "name": "кг",
         "conversion_factor": 1000.0,
         "base_range": {
-          "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+          "id": "bea75b9e-340b-4543-8f55-5334eda69881",
           "name": "грамм",
           "conversion_factor": 1.0,
           "base_range": null
@@ -170,30 +170,30 @@
       }
     },
     {
-      "id": "bb388f19-f713-41ea-aae7-0ff20cdd0e03",
+      "id": "3244f5ea-6bf5-4e64-b2de-3ed35e77724a",
       "name": "Печенье Ромашка",
       "full_name": "Песочное печенье «Ромашка» ГОСТ",
       "group": {
-        "id": "cfecf89a-0fb2-44ac-a740-f8669523f28e",
+        "id": "4bd70309-2273-493e-9408-ef576dece801",
         "name": "Готовая продукция"
       },
       "range": {
-        "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+        "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
         "name": "штука",
         "conversion_factor": 1.0,
         "base_range": null
       }
     },
     {
-      "id": "dd681c4f-5972-42fa-8a0f-702a3af5f9c9",
+      "id": "7d60f0bb-fde3-4334-bfd3-b766202c6a83",
       "name": "Коробка",
       "full_name": "Коробка картонная крафтовая для печенья",
       "group": {
-        "id": "c8a9c91a-f0f9-4c7e-ace8-39b51be0d64e",
+        "id": "78f79979-6540-4087-9b76-9af541df5f51",
         "name": "Упаковка"
       },
       "range": {
-        "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+        "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
         "name": "штука",
         "conversion_factor": 1.0,
         "base_range": null
@@ -202,26 +202,26 @@
   ],
   "recipes": [
     {
-      "id": "e29e6c18-66b6-44fc-b598-3d1d840e700b",
+      "id": "650f5194-39c3-49d9-abfe-b1d13815cc37",
       "name": "Рецепт: Песочное тесто",
       "cooking_time": 15,
       "portions": 1,
       "brutto": 560.0,
       "netto": 550.0,
       "dish": {
-        "id": "f7d87679-1300-4ec2-8fca-13e28bbd1b1e",
+        "id": "def38153-4cc9-44fd-8d82-4cc2c5c5902a",
         "name": "Песочное тесто",
         "full_name": "Тесто песочное охлажденное полуфабрикат",
         "group": {
-          "id": "0599e632-c7ea-4931-8f8c-e30587949ce8",
+          "id": "45b4556a-34ff-4c8d-94ce-135abb1973a8",
           "name": "Полуфабрикаты"
         },
         "range": {
-          "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+          "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
           "name": "кг",
           "conversion_factor": 1000.0,
           "base_range": {
-            "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+            "id": "bea75b9e-340b-4543-8f55-5334eda69881",
             "name": "грамм",
             "conversion_factor": 1.0,
             "base_range": null
@@ -230,24 +230,24 @@
       },
       "rows": [
         {
-          "id": "731e6017-912d-40a9-8781-0a3542a1aaee",
+          "id": "65f24454-c251-4dda-8010-94692959827a",
           "name": "Мука",
           "brutto": 250.0,
           "netto": 250.0,
           "nomenclature": {
-            "id": "24885cad-021b-4da3-965c-aa501211556e",
+            "id": "bbc947aa-8ff3-470b-b326-f7443c4d4cd3",
             "name": "Мука",
             "full_name": "Мука пшеничная высший сорт ГОСТ",
             "group": {
-              "id": "a2127b59-eee5-428e-b9f8-f7941f7af9a0",
+              "id": "839c3693-6fb8-41a3-b7a7-357ac7b1d733",
               "name": "Сырье"
             },
             "range": {
-              "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+              "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
               "name": "кг",
               "conversion_factor": 1000.0,
               "base_range": {
-                "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                 "name": "грамм",
                 "conversion_factor": 1.0,
                 "base_range": null
@@ -255,11 +255,11 @@
             }
           },
           "range": {
-            "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+            "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
             "name": "кг",
             "conversion_factor": 1000.0,
             "base_range": {
-              "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+              "id": "bea75b9e-340b-4543-8f55-5334eda69881",
               "name": "грамм",
               "conversion_factor": 1.0,
               "base_range": null
@@ -267,24 +267,24 @@
           }
         },
         {
-          "id": "1138a450-ad12-43f1-bfcf-6713fb13f9c0",
+          "id": "1c58d6ca-ea5a-4177-a924-112381a3595a",
           "name": "Масло",
           "brutto": 150.0,
           "netto": 150.0,
           "nomenclature": {
-            "id": "f31b383c-86e3-4701-a628-17e1818e1075",
+            "id": "8dcf636f-b4d3-428f-a1d4-496a52525520",
             "name": "Масло",
             "full_name": "Масло сливочное 82.5% ГОСТ",
             "group": {
-              "id": "7677566f-7de5-4873-92bc-1f1f03ca15f6",
+              "id": "e8da6c2c-37eb-43ec-ae05-ba901d762b78",
               "name": "Ингредиенты"
             },
             "range": {
-              "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+              "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
               "name": "кг",
               "conversion_factor": 1000.0,
               "base_range": {
-                "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                 "name": "грамм",
                 "conversion_factor": 1.0,
                 "base_range": null
@@ -292,11 +292,11 @@
             }
           },
           "range": {
-            "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+            "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
             "name": "кг",
             "conversion_factor": 1000.0,
             "base_range": {
-              "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+              "id": "bea75b9e-340b-4543-8f55-5334eda69881",
               "name": "грамм",
               "conversion_factor": 1.0,
               "base_range": null
@@ -304,24 +304,24 @@
           }
         },
         {
-          "id": "4806ca27-2e57-42af-a50f-ee6705e1955c",
+          "id": "0f89d6ff-94dd-4285-a07a-7cca70089ac9",
           "name": "Сахар",
           "brutto": 100.0,
           "netto": 100.0,
           "nomenclature": {
-            "id": "a34258c4-5ac2-49e9-b0a3-d2312b1f8fc7",
+            "id": "54ff018c-6e71-4bcf-9fb4-68f02f01dfcb",
             "name": "Сахар",
             "full_name": "Сахар белый свекловичный ГОСТ",
             "group": {
-              "id": "a2127b59-eee5-428e-b9f8-f7941f7af9a0",
+              "id": "839c3693-6fb8-41a3-b7a7-357ac7b1d733",
               "name": "Сырье"
             },
             "range": {
-              "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+              "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
               "name": "кг",
               "conversion_factor": 1000.0,
               "base_range": {
-                "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                 "name": "грамм",
                 "conversion_factor": 1.0,
                 "base_range": null
@@ -329,11 +329,11 @@
             }
           },
           "range": {
-            "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+            "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
             "name": "кг",
             "conversion_factor": 1000.0,
             "base_range": {
-              "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+              "id": "bea75b9e-340b-4543-8f55-5334eda69881",
               "name": "грамм",
               "conversion_factor": 1.0,
               "base_range": null
@@ -341,27 +341,27 @@
           }
         },
         {
-          "id": "e27a4fe0-ce0f-4a57-9448-dc47c7beff00",
+          "id": "cd66961d-cfea-4e3a-bd1b-c064744e27f5",
           "name": "Яйцо",
           "brutto": 60.0,
           "netto": 50.0,
           "nomenclature": {
-            "id": "06913964-8b10-4b7a-8710-4ff6b5375a10",
+            "id": "20b9e781-3d7c-4be6-b6eb-55de8c51d814",
             "name": "Яйцо",
             "full_name": "Яйцо куриное столовое С0",
             "group": {
-              "id": "7677566f-7de5-4873-92bc-1f1f03ca15f6",
+              "id": "e8da6c2c-37eb-43ec-ae05-ba901d762b78",
               "name": "Ингредиенты"
             },
             "range": {
-              "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+              "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
               "name": "штука",
               "conversion_factor": 1.0,
               "base_range": null
             }
           },
           "range": {
-            "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+            "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
             "name": "штука",
             "conversion_factor": 1.0,
             "base_range": null
@@ -370,24 +370,24 @@
       ],
       "items": [
         {
-          "id": "731e6017-912d-40a9-8781-0a3542a1aaee",
+          "id": "65f24454-c251-4dda-8010-94692959827a",
           "name": "Мука",
           "brutto": 250.0,
           "netto": 250.0,
           "nomenclature": {
-            "id": "24885cad-021b-4da3-965c-aa501211556e",
+            "id": "bbc947aa-8ff3-470b-b326-f7443c4d4cd3",
             "name": "Мука",
             "full_name": "Мука пшеничная высший сорт ГОСТ",
             "group": {
-              "id": "a2127b59-eee5-428e-b9f8-f7941f7af9a0",
+              "id": "839c3693-6fb8-41a3-b7a7-357ac7b1d733",
               "name": "Сырье"
             },
             "range": {
-              "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+              "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
               "name": "кг",
               "conversion_factor": 1000.0,
               "base_range": {
-                "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                 "name": "грамм",
                 "conversion_factor": 1.0,
                 "base_range": null
@@ -395,11 +395,11 @@
             }
           },
           "range": {
-            "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+            "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
             "name": "кг",
             "conversion_factor": 1000.0,
             "base_range": {
-              "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+              "id": "bea75b9e-340b-4543-8f55-5334eda69881",
               "name": "грамм",
               "conversion_factor": 1.0,
               "base_range": null
@@ -407,24 +407,24 @@
           }
         },
         {
-          "id": "1138a450-ad12-43f1-bfcf-6713fb13f9c0",
+          "id": "1c58d6ca-ea5a-4177-a924-112381a3595a",
           "name": "Масло",
           "brutto": 150.0,
           "netto": 150.0,
           "nomenclature": {
-            "id": "f31b383c-86e3-4701-a628-17e1818e1075",
+            "id": "8dcf636f-b4d3-428f-a1d4-496a52525520",
             "name": "Масло",
             "full_name": "Масло сливочное 82.5% ГОСТ",
             "group": {
-              "id": "7677566f-7de5-4873-92bc-1f1f03ca15f6",
+              "id": "e8da6c2c-37eb-43ec-ae05-ba901d762b78",
               "name": "Ингредиенты"
             },
             "range": {
-              "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+              "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
               "name": "кг",
               "conversion_factor": 1000.0,
               "base_range": {
-                "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                 "name": "грамм",
                 "conversion_factor": 1.0,
                 "base_range": null
@@ -432,11 +432,11 @@
             }
           },
           "range": {
-            "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+            "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
             "name": "кг",
             "conversion_factor": 1000.0,
             "base_range": {
-              "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+              "id": "bea75b9e-340b-4543-8f55-5334eda69881",
               "name": "грамм",
               "conversion_factor": 1.0,
               "base_range": null
@@ -444,24 +444,24 @@
           }
         },
         {
-          "id": "4806ca27-2e57-42af-a50f-ee6705e1955c",
+          "id": "0f89d6ff-94dd-4285-a07a-7cca70089ac9",
           "name": "Сахар",
           "brutto": 100.0,
           "netto": 100.0,
           "nomenclature": {
-            "id": "a34258c4-5ac2-49e9-b0a3-d2312b1f8fc7",
+            "id": "54ff018c-6e71-4bcf-9fb4-68f02f01dfcb",
             "name": "Сахар",
             "full_name": "Сахар белый свекловичный ГОСТ",
             "group": {
-              "id": "a2127b59-eee5-428e-b9f8-f7941f7af9a0",
+              "id": "839c3693-6fb8-41a3-b7a7-357ac7b1d733",
               "name": "Сырье"
             },
             "range": {
-              "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+              "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
               "name": "кг",
               "conversion_factor": 1000.0,
               "base_range": {
-                "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                 "name": "грамм",
                 "conversion_factor": 1.0,
                 "base_range": null
@@ -469,11 +469,11 @@
             }
           },
           "range": {
-            "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+            "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
             "name": "кг",
             "conversion_factor": 1000.0,
             "base_range": {
-              "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+              "id": "bea75b9e-340b-4543-8f55-5334eda69881",
               "name": "грамм",
               "conversion_factor": 1.0,
               "base_range": null
@@ -481,27 +481,27 @@
           }
         },
         {
-          "id": "e27a4fe0-ce0f-4a57-9448-dc47c7beff00",
+          "id": "cd66961d-cfea-4e3a-bd1b-c064744e27f5",
           "name": "Яйцо",
           "brutto": 60.0,
           "netto": 50.0,
           "nomenclature": {
-            "id": "06913964-8b10-4b7a-8710-4ff6b5375a10",
+            "id": "20b9e781-3d7c-4be6-b6eb-55de8c51d814",
             "name": "Яйцо",
             "full_name": "Яйцо куриное столовое С0",
             "group": {
-              "id": "7677566f-7de5-4873-92bc-1f1f03ca15f6",
+              "id": "e8da6c2c-37eb-43ec-ae05-ba901d762b78",
               "name": "Ингредиенты"
             },
             "range": {
-              "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+              "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
               "name": "штука",
               "conversion_factor": 1.0,
               "base_range": null
             }
           },
           "range": {
-            "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+            "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
             "name": "штука",
             "conversion_factor": 1.0,
             "base_range": null
@@ -515,22 +515,22 @@
       ]
     },
     {
-      "id": "2ab316f1-6697-472e-a994-960dc66d6ebc",
+      "id": "85380999-91bc-4f65-ae31-57081c8f11a5",
       "name": "Рецепт: Песочное печенье «Ромашка»",
       "cooking_time": 25,
       "portions": 10,
       "brutto": 580.0,
       "netto": 550.0,
       "dish": {
-        "id": "bb388f19-f713-41ea-aae7-0ff20cdd0e03",
+        "id": "3244f5ea-6bf5-4e64-b2de-3ed35e77724a",
         "name": "Печенье Ромашка",
         "full_name": "Песочное печенье «Ромашка» ГОСТ",
         "group": {
-          "id": "cfecf89a-0fb2-44ac-a740-f8669523f28e",
+          "id": "4bd70309-2273-493e-9408-ef576dece801",
           "name": "Готовая продукция"
         },
         "range": {
-          "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+          "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
           "name": "штука",
           "conversion_factor": 1.0,
           "base_range": null
@@ -538,24 +538,24 @@
       },
       "rows": [
         {
-          "id": "361b000a-b855-46a7-8036-3ff37b38c290",
+          "id": "b8deeca7-b735-4da2-886a-532028953f75",
           "name": "Песочное тесто",
           "brutto": 560.0,
           "netto": 550.0,
           "nomenclature": {
-            "id": "f7d87679-1300-4ec2-8fca-13e28bbd1b1e",
+            "id": "def38153-4cc9-44fd-8d82-4cc2c5c5902a",
             "name": "Песочное тесто",
             "full_name": "Тесто песочное охлажденное полуфабрикат",
             "group": {
-              "id": "0599e632-c7ea-4931-8f8c-e30587949ce8",
+              "id": "45b4556a-34ff-4c8d-94ce-135abb1973a8",
               "name": "Полуфабрикаты"
             },
             "range": {
-              "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+              "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
               "name": "кг",
               "conversion_factor": 1000.0,
               "base_range": {
-                "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                 "name": "грамм",
                 "conversion_factor": 1.0,
                 "base_range": null
@@ -563,37 +563,37 @@
             }
           },
           "range": {
-            "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+            "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
             "name": "кг",
             "conversion_factor": 1000.0,
             "base_range": {
-              "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+              "id": "bea75b9e-340b-4543-8f55-5334eda69881",
               "name": "грамм",
               "conversion_factor": 1.0,
               "base_range": null
             }
           },
           "sub_recipe": {
-            "id": "e29e6c18-66b6-44fc-b598-3d1d840e700b",
+            "id": "650f5194-39c3-49d9-abfe-b1d13815cc37",
             "name": "Рецепт: Песочное тесто",
             "cooking_time": 15,
             "portions": 1,
             "brutto": 560.0,
             "netto": 550.0,
             "dish": {
-              "id": "f7d87679-1300-4ec2-8fca-13e28bbd1b1e",
+              "id": "def38153-4cc9-44fd-8d82-4cc2c5c5902a",
               "name": "Песочное тесто",
               "full_name": "Тесто песочное охлажденное полуфабрикат",
               "group": {
-                "id": "0599e632-c7ea-4931-8f8c-e30587949ce8",
+                "id": "45b4556a-34ff-4c8d-94ce-135abb1973a8",
                 "name": "Полуфабрикаты"
               },
               "range": {
-                "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                 "name": "кг",
                 "conversion_factor": 1000.0,
                 "base_range": {
-                  "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                  "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                   "name": "грамм",
                   "conversion_factor": 1.0,
                   "base_range": null
@@ -602,24 +602,24 @@
             },
             "rows": [
               {
-                "id": "731e6017-912d-40a9-8781-0a3542a1aaee",
+                "id": "65f24454-c251-4dda-8010-94692959827a",
                 "name": "Мука",
                 "brutto": 250.0,
                 "netto": 250.0,
                 "nomenclature": {
-                  "id": "24885cad-021b-4da3-965c-aa501211556e",
+                  "id": "bbc947aa-8ff3-470b-b326-f7443c4d4cd3",
                   "name": "Мука",
                   "full_name": "Мука пшеничная высший сорт ГОСТ",
                   "group": {
-                    "id": "a2127b59-eee5-428e-b9f8-f7941f7af9a0",
+                    "id": "839c3693-6fb8-41a3-b7a7-357ac7b1d733",
                     "name": "Сырье"
                   },
                   "range": {
-                    "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                    "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                     "name": "кг",
                     "conversion_factor": 1000.0,
                     "base_range": {
-                      "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                      "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                       "name": "грамм",
                       "conversion_factor": 1.0,
                       "base_range": null
@@ -627,11 +627,11 @@
                   }
                 },
                 "range": {
-                  "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                  "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                   "name": "кг",
                   "conversion_factor": 1000.0,
                   "base_range": {
-                    "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                    "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                     "name": "грамм",
                     "conversion_factor": 1.0,
                     "base_range": null
@@ -639,24 +639,24 @@
                 }
               },
               {
-                "id": "1138a450-ad12-43f1-bfcf-6713fb13f9c0",
+                "id": "1c58d6ca-ea5a-4177-a924-112381a3595a",
                 "name": "Масло",
                 "brutto": 150.0,
                 "netto": 150.0,
                 "nomenclature": {
-                  "id": "f31b383c-86e3-4701-a628-17e1818e1075",
+                  "id": "8dcf636f-b4d3-428f-a1d4-496a52525520",
                   "name": "Масло",
                   "full_name": "Масло сливочное 82.5% ГОСТ",
                   "group": {
-                    "id": "7677566f-7de5-4873-92bc-1f1f03ca15f6",
+                    "id": "e8da6c2c-37eb-43ec-ae05-ba901d762b78",
                     "name": "Ингредиенты"
                   },
                   "range": {
-                    "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                    "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                     "name": "кг",
                     "conversion_factor": 1000.0,
                     "base_range": {
-                      "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                      "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                       "name": "грамм",
                       "conversion_factor": 1.0,
                       "base_range": null
@@ -664,11 +664,11 @@
                   }
                 },
                 "range": {
-                  "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                  "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                   "name": "кг",
                   "conversion_factor": 1000.0,
                   "base_range": {
-                    "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                    "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                     "name": "грамм",
                     "conversion_factor": 1.0,
                     "base_range": null
@@ -676,24 +676,24 @@
                 }
               },
               {
-                "id": "4806ca27-2e57-42af-a50f-ee6705e1955c",
+                "id": "0f89d6ff-94dd-4285-a07a-7cca70089ac9",
                 "name": "Сахар",
                 "brutto": 100.0,
                 "netto": 100.0,
                 "nomenclature": {
-                  "id": "a34258c4-5ac2-49e9-b0a3-d2312b1f8fc7",
+                  "id": "54ff018c-6e71-4bcf-9fb4-68f02f01dfcb",
                   "name": "Сахар",
                   "full_name": "Сахар белый свекловичный ГОСТ",
                   "group": {
-                    "id": "a2127b59-eee5-428e-b9f8-f7941f7af9a0",
+                    "id": "839c3693-6fb8-41a3-b7a7-357ac7b1d733",
                     "name": "Сырье"
                   },
                   "range": {
-                    "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                    "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                     "name": "кг",
                     "conversion_factor": 1000.0,
                     "base_range": {
-                      "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                      "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                       "name": "грамм",
                       "conversion_factor": 1.0,
                       "base_range": null
@@ -701,11 +701,11 @@
                   }
                 },
                 "range": {
-                  "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                  "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                   "name": "кг",
                   "conversion_factor": 1000.0,
                   "base_range": {
-                    "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                    "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                     "name": "грамм",
                     "conversion_factor": 1.0,
                     "base_range": null
@@ -713,27 +713,27 @@
                 }
               },
               {
-                "id": "e27a4fe0-ce0f-4a57-9448-dc47c7beff00",
+                "id": "cd66961d-cfea-4e3a-bd1b-c064744e27f5",
                 "name": "Яйцо",
                 "brutto": 60.0,
                 "netto": 50.0,
                 "nomenclature": {
-                  "id": "06913964-8b10-4b7a-8710-4ff6b5375a10",
+                  "id": "20b9e781-3d7c-4be6-b6eb-55de8c51d814",
                   "name": "Яйцо",
                   "full_name": "Яйцо куриное столовое С0",
                   "group": {
-                    "id": "7677566f-7de5-4873-92bc-1f1f03ca15f6",
+                    "id": "e8da6c2c-37eb-43ec-ae05-ba901d762b78",
                     "name": "Ингредиенты"
                   },
                   "range": {
-                    "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+                    "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
                     "name": "штука",
                     "conversion_factor": 1.0,
                     "base_range": null
                   }
                 },
                 "range": {
-                  "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+                  "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
                   "name": "штука",
                   "conversion_factor": 1.0,
                   "base_range": null
@@ -742,24 +742,24 @@
             ],
             "items": [
               {
-                "id": "731e6017-912d-40a9-8781-0a3542a1aaee",
+                "id": "65f24454-c251-4dda-8010-94692959827a",
                 "name": "Мука",
                 "brutto": 250.0,
                 "netto": 250.0,
                 "nomenclature": {
-                  "id": "24885cad-021b-4da3-965c-aa501211556e",
+                  "id": "bbc947aa-8ff3-470b-b326-f7443c4d4cd3",
                   "name": "Мука",
                   "full_name": "Мука пшеничная высший сорт ГОСТ",
                   "group": {
-                    "id": "a2127b59-eee5-428e-b9f8-f7941f7af9a0",
+                    "id": "839c3693-6fb8-41a3-b7a7-357ac7b1d733",
                     "name": "Сырье"
                   },
                   "range": {
-                    "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                    "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                     "name": "кг",
                     "conversion_factor": 1000.0,
                     "base_range": {
-                      "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                      "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                       "name": "грамм",
                       "conversion_factor": 1.0,
                       "base_range": null
@@ -767,11 +767,11 @@
                   }
                 },
                 "range": {
-                  "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                  "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                   "name": "кг",
                   "conversion_factor": 1000.0,
                   "base_range": {
-                    "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                    "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                     "name": "грамм",
                     "conversion_factor": 1.0,
                     "base_range": null
@@ -779,24 +779,24 @@
                 }
               },
               {
-                "id": "1138a450-ad12-43f1-bfcf-6713fb13f9c0",
+                "id": "1c58d6ca-ea5a-4177-a924-112381a3595a",
                 "name": "Масло",
                 "brutto": 150.0,
                 "netto": 150.0,
                 "nomenclature": {
-                  "id": "f31b383c-86e3-4701-a628-17e1818e1075",
+                  "id": "8dcf636f-b4d3-428f-a1d4-496a52525520",
                   "name": "Масло",
                   "full_name": "Масло сливочное 82.5% ГОСТ",
                   "group": {
-                    "id": "7677566f-7de5-4873-92bc-1f1f03ca15f6",
+                    "id": "e8da6c2c-37eb-43ec-ae05-ba901d762b78",
                     "name": "Ингредиенты"
                   },
                   "range": {
-                    "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                    "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                     "name": "кг",
                     "conversion_factor": 1000.0,
                     "base_range": {
-                      "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                      "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                       "name": "грамм",
                       "conversion_factor": 1.0,
                       "base_range": null
@@ -804,11 +804,11 @@
                   }
                 },
                 "range": {
-                  "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                  "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                   "name": "кг",
                   "conversion_factor": 1000.0,
                   "base_range": {
-                    "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                    "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                     "name": "грамм",
                     "conversion_factor": 1.0,
                     "base_range": null
@@ -816,24 +816,24 @@
                 }
               },
               {
-                "id": "4806ca27-2e57-42af-a50f-ee6705e1955c",
+                "id": "0f89d6ff-94dd-4285-a07a-7cca70089ac9",
                 "name": "Сахар",
                 "brutto": 100.0,
                 "netto": 100.0,
                 "nomenclature": {
-                  "id": "a34258c4-5ac2-49e9-b0a3-d2312b1f8fc7",
+                  "id": "54ff018c-6e71-4bcf-9fb4-68f02f01dfcb",
                   "name": "Сахар",
                   "full_name": "Сахар белый свекловичный ГОСТ",
                   "group": {
-                    "id": "a2127b59-eee5-428e-b9f8-f7941f7af9a0",
+                    "id": "839c3693-6fb8-41a3-b7a7-357ac7b1d733",
                     "name": "Сырье"
                   },
                   "range": {
-                    "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                    "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                     "name": "кг",
                     "conversion_factor": 1000.0,
                     "base_range": {
-                      "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                      "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                       "name": "грамм",
                       "conversion_factor": 1.0,
                       "base_range": null
@@ -841,11 +841,11 @@
                   }
                 },
                 "range": {
-                  "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                  "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                   "name": "кг",
                   "conversion_factor": 1000.0,
                   "base_range": {
-                    "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                    "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                     "name": "грамм",
                     "conversion_factor": 1.0,
                     "base_range": null
@@ -853,27 +853,27 @@
                 }
               },
               {
-                "id": "e27a4fe0-ce0f-4a57-9448-dc47c7beff00",
+                "id": "cd66961d-cfea-4e3a-bd1b-c064744e27f5",
                 "name": "Яйцо",
                 "brutto": 60.0,
                 "netto": 50.0,
                 "nomenclature": {
-                  "id": "06913964-8b10-4b7a-8710-4ff6b5375a10",
+                  "id": "20b9e781-3d7c-4be6-b6eb-55de8c51d814",
                   "name": "Яйцо",
                   "full_name": "Яйцо куриное столовое С0",
                   "group": {
-                    "id": "7677566f-7de5-4873-92bc-1f1f03ca15f6",
+                    "id": "e8da6c2c-37eb-43ec-ae05-ba901d762b78",
                     "name": "Ингредиенты"
                   },
                   "range": {
-                    "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+                    "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
                     "name": "штука",
                     "conversion_factor": 1.0,
                     "base_range": null
                   }
                 },
                 "range": {
-                  "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+                  "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
                   "name": "штука",
                   "conversion_factor": 1.0,
                   "base_range": null
@@ -888,27 +888,27 @@
           }
         },
         {
-          "id": "9f51c66d-b68e-419d-adb6-3c5ba75b4b01",
+          "id": "a07572f0-a122-4320-b2ed-f75053767bed",
           "name": "Коробка",
           "brutto": 20.0,
           "netto": 0.0,
           "nomenclature": {
-            "id": "dd681c4f-5972-42fa-8a0f-702a3af5f9c9",
+            "id": "7d60f0bb-fde3-4334-bfd3-b766202c6a83",
             "name": "Коробка",
             "full_name": "Коробка картонная крафтовая для печенья",
             "group": {
-              "id": "c8a9c91a-f0f9-4c7e-ace8-39b51be0d64e",
+              "id": "78f79979-6540-4087-9b76-9af541df5f51",
               "name": "Упаковка"
             },
             "range": {
-              "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+              "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
               "name": "штука",
               "conversion_factor": 1.0,
               "base_range": null
             }
           },
           "range": {
-            "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+            "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
             "name": "штука",
             "conversion_factor": 1.0,
             "base_range": null
@@ -917,24 +917,24 @@
       ],
       "items": [
         {
-          "id": "361b000a-b855-46a7-8036-3ff37b38c290",
+          "id": "b8deeca7-b735-4da2-886a-532028953f75",
           "name": "Песочное тесто",
           "brutto": 560.0,
           "netto": 550.0,
           "nomenclature": {
-            "id": "f7d87679-1300-4ec2-8fca-13e28bbd1b1e",
+            "id": "def38153-4cc9-44fd-8d82-4cc2c5c5902a",
             "name": "Песочное тесто",
             "full_name": "Тесто песочное охлажденное полуфабрикат",
             "group": {
-              "id": "0599e632-c7ea-4931-8f8c-e30587949ce8",
+              "id": "45b4556a-34ff-4c8d-94ce-135abb1973a8",
               "name": "Полуфабрикаты"
             },
             "range": {
-              "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+              "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
               "name": "кг",
               "conversion_factor": 1000.0,
               "base_range": {
-                "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                 "name": "грамм",
                 "conversion_factor": 1.0,
                 "base_range": null
@@ -942,37 +942,37 @@
             }
           },
           "range": {
-            "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+            "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
             "name": "кг",
             "conversion_factor": 1000.0,
             "base_range": {
-              "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+              "id": "bea75b9e-340b-4543-8f55-5334eda69881",
               "name": "грамм",
               "conversion_factor": 1.0,
               "base_range": null
             }
           },
           "sub_recipe": {
-            "id": "e29e6c18-66b6-44fc-b598-3d1d840e700b",
+            "id": "650f5194-39c3-49d9-abfe-b1d13815cc37",
             "name": "Рецепт: Песочное тесто",
             "cooking_time": 15,
             "portions": 1,
             "brutto": 560.0,
             "netto": 550.0,
             "dish": {
-              "id": "f7d87679-1300-4ec2-8fca-13e28bbd1b1e",
+              "id": "def38153-4cc9-44fd-8d82-4cc2c5c5902a",
               "name": "Песочное тесто",
               "full_name": "Тесто песочное охлажденное полуфабрикат",
               "group": {
-                "id": "0599e632-c7ea-4931-8f8c-e30587949ce8",
+                "id": "45b4556a-34ff-4c8d-94ce-135abb1973a8",
                 "name": "Полуфабрикаты"
               },
               "range": {
-                "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                 "name": "кг",
                 "conversion_factor": 1000.0,
                 "base_range": {
-                  "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                  "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                   "name": "грамм",
                   "conversion_factor": 1.0,
                   "base_range": null
@@ -981,24 +981,24 @@
             },
             "rows": [
               {
-                "id": "731e6017-912d-40a9-8781-0a3542a1aaee",
+                "id": "65f24454-c251-4dda-8010-94692959827a",
                 "name": "Мука",
                 "brutto": 250.0,
                 "netto": 250.0,
                 "nomenclature": {
-                  "id": "24885cad-021b-4da3-965c-aa501211556e",
+                  "id": "bbc947aa-8ff3-470b-b326-f7443c4d4cd3",
                   "name": "Мука",
                   "full_name": "Мука пшеничная высший сорт ГОСТ",
                   "group": {
-                    "id": "a2127b59-eee5-428e-b9f8-f7941f7af9a0",
+                    "id": "839c3693-6fb8-41a3-b7a7-357ac7b1d733",
                     "name": "Сырье"
                   },
                   "range": {
-                    "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                    "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                     "name": "кг",
                     "conversion_factor": 1000.0,
                     "base_range": {
-                      "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                      "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                       "name": "грамм",
                       "conversion_factor": 1.0,
                       "base_range": null
@@ -1006,11 +1006,11 @@
                   }
                 },
                 "range": {
-                  "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                  "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                   "name": "кг",
                   "conversion_factor": 1000.0,
                   "base_range": {
-                    "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                    "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                     "name": "грамм",
                     "conversion_factor": 1.0,
                     "base_range": null
@@ -1018,24 +1018,24 @@
                 }
               },
               {
-                "id": "1138a450-ad12-43f1-bfcf-6713fb13f9c0",
+                "id": "1c58d6ca-ea5a-4177-a924-112381a3595a",
                 "name": "Масло",
                 "brutto": 150.0,
                 "netto": 150.0,
                 "nomenclature": {
-                  "id": "f31b383c-86e3-4701-a628-17e1818e1075",
+                  "id": "8dcf636f-b4d3-428f-a1d4-496a52525520",
                   "name": "Масло",
                   "full_name": "Масло сливочное 82.5% ГОСТ",
                   "group": {
-                    "id": "7677566f-7de5-4873-92bc-1f1f03ca15f6",
+                    "id": "e8da6c2c-37eb-43ec-ae05-ba901d762b78",
                     "name": "Ингредиенты"
                   },
                   "range": {
-                    "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                    "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                     "name": "кг",
                     "conversion_factor": 1000.0,
                     "base_range": {
-                      "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                      "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                       "name": "грамм",
                       "conversion_factor": 1.0,
                       "base_range": null
@@ -1043,11 +1043,11 @@
                   }
                 },
                 "range": {
-                  "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                  "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                   "name": "кг",
                   "conversion_factor": 1000.0,
                   "base_range": {
-                    "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                    "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                     "name": "грамм",
                     "conversion_factor": 1.0,
                     "base_range": null
@@ -1055,24 +1055,24 @@
                 }
               },
               {
-                "id": "4806ca27-2e57-42af-a50f-ee6705e1955c",
+                "id": "0f89d6ff-94dd-4285-a07a-7cca70089ac9",
                 "name": "Сахар",
                 "brutto": 100.0,
                 "netto": 100.0,
                 "nomenclature": {
-                  "id": "a34258c4-5ac2-49e9-b0a3-d2312b1f8fc7",
+                  "id": "54ff018c-6e71-4bcf-9fb4-68f02f01dfcb",
                   "name": "Сахар",
                   "full_name": "Сахар белый свекловичный ГОСТ",
                   "group": {
-                    "id": "a2127b59-eee5-428e-b9f8-f7941f7af9a0",
+                    "id": "839c3693-6fb8-41a3-b7a7-357ac7b1d733",
                     "name": "Сырье"
                   },
                   "range": {
-                    "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                    "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                     "name": "кг",
                     "conversion_factor": 1000.0,
                     "base_range": {
-                      "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                      "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                       "name": "грамм",
                       "conversion_factor": 1.0,
                       "base_range": null
@@ -1080,11 +1080,11 @@
                   }
                 },
                 "range": {
-                  "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                  "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                   "name": "кг",
                   "conversion_factor": 1000.0,
                   "base_range": {
-                    "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                    "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                     "name": "грамм",
                     "conversion_factor": 1.0,
                     "base_range": null
@@ -1092,27 +1092,27 @@
                 }
               },
               {
-                "id": "e27a4fe0-ce0f-4a57-9448-dc47c7beff00",
+                "id": "cd66961d-cfea-4e3a-bd1b-c064744e27f5",
                 "name": "Яйцо",
                 "brutto": 60.0,
                 "netto": 50.0,
                 "nomenclature": {
-                  "id": "06913964-8b10-4b7a-8710-4ff6b5375a10",
+                  "id": "20b9e781-3d7c-4be6-b6eb-55de8c51d814",
                   "name": "Яйцо",
                   "full_name": "Яйцо куриное столовое С0",
                   "group": {
-                    "id": "7677566f-7de5-4873-92bc-1f1f03ca15f6",
+                    "id": "e8da6c2c-37eb-43ec-ae05-ba901d762b78",
                     "name": "Ингредиенты"
                   },
                   "range": {
-                    "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+                    "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
                     "name": "штука",
                     "conversion_factor": 1.0,
                     "base_range": null
                   }
                 },
                 "range": {
-                  "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+                  "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
                   "name": "штука",
                   "conversion_factor": 1.0,
                   "base_range": null
@@ -1121,24 +1121,24 @@
             ],
             "items": [
               {
-                "id": "731e6017-912d-40a9-8781-0a3542a1aaee",
+                "id": "65f24454-c251-4dda-8010-94692959827a",
                 "name": "Мука",
                 "brutto": 250.0,
                 "netto": 250.0,
                 "nomenclature": {
-                  "id": "24885cad-021b-4da3-965c-aa501211556e",
+                  "id": "bbc947aa-8ff3-470b-b326-f7443c4d4cd3",
                   "name": "Мука",
                   "full_name": "Мука пшеничная высший сорт ГОСТ",
                   "group": {
-                    "id": "a2127b59-eee5-428e-b9f8-f7941f7af9a0",
+                    "id": "839c3693-6fb8-41a3-b7a7-357ac7b1d733",
                     "name": "Сырье"
                   },
                   "range": {
-                    "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                    "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                     "name": "кг",
                     "conversion_factor": 1000.0,
                     "base_range": {
-                      "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                      "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                       "name": "грамм",
                       "conversion_factor": 1.0,
                       "base_range": null
@@ -1146,11 +1146,11 @@
                   }
                 },
                 "range": {
-                  "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                  "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                   "name": "кг",
                   "conversion_factor": 1000.0,
                   "base_range": {
-                    "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                    "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                     "name": "грамм",
                     "conversion_factor": 1.0,
                     "base_range": null
@@ -1158,24 +1158,24 @@
                 }
               },
               {
-                "id": "1138a450-ad12-43f1-bfcf-6713fb13f9c0",
+                "id": "1c58d6ca-ea5a-4177-a924-112381a3595a",
                 "name": "Масло",
                 "brutto": 150.0,
                 "netto": 150.0,
                 "nomenclature": {
-                  "id": "f31b383c-86e3-4701-a628-17e1818e1075",
+                  "id": "8dcf636f-b4d3-428f-a1d4-496a52525520",
                   "name": "Масло",
                   "full_name": "Масло сливочное 82.5% ГОСТ",
                   "group": {
-                    "id": "7677566f-7de5-4873-92bc-1f1f03ca15f6",
+                    "id": "e8da6c2c-37eb-43ec-ae05-ba901d762b78",
                     "name": "Ингредиенты"
                   },
                   "range": {
-                    "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                    "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                     "name": "кг",
                     "conversion_factor": 1000.0,
                     "base_range": {
-                      "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                      "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                       "name": "грамм",
                       "conversion_factor": 1.0,
                       "base_range": null
@@ -1183,11 +1183,11 @@
                   }
                 },
                 "range": {
-                  "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                  "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                   "name": "кг",
                   "conversion_factor": 1000.0,
                   "base_range": {
-                    "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                    "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                     "name": "грамм",
                     "conversion_factor": 1.0,
                     "base_range": null
@@ -1195,24 +1195,24 @@
                 }
               },
               {
-                "id": "4806ca27-2e57-42af-a50f-ee6705e1955c",
+                "id": "0f89d6ff-94dd-4285-a07a-7cca70089ac9",
                 "name": "Сахар",
                 "brutto": 100.0,
                 "netto": 100.0,
                 "nomenclature": {
-                  "id": "a34258c4-5ac2-49e9-b0a3-d2312b1f8fc7",
+                  "id": "54ff018c-6e71-4bcf-9fb4-68f02f01dfcb",
                   "name": "Сахар",
                   "full_name": "Сахар белый свекловичный ГОСТ",
                   "group": {
-                    "id": "a2127b59-eee5-428e-b9f8-f7941f7af9a0",
+                    "id": "839c3693-6fb8-41a3-b7a7-357ac7b1d733",
                     "name": "Сырье"
                   },
                   "range": {
-                    "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                    "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                     "name": "кг",
                     "conversion_factor": 1000.0,
                     "base_range": {
-                      "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                      "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                       "name": "грамм",
                       "conversion_factor": 1.0,
                       "base_range": null
@@ -1220,11 +1220,11 @@
                   }
                 },
                 "range": {
-                  "id": "ad0df344-7d56-4798-a020-3e1b2a8618e3",
+                  "id": "160849c3-3cd5-4665-98dc-337d45c6c8e2",
                   "name": "кг",
                   "conversion_factor": 1000.0,
                   "base_range": {
-                    "id": "e2570fef-8dbd-48a4-a307-16576d676fa7",
+                    "id": "bea75b9e-340b-4543-8f55-5334eda69881",
                     "name": "грамм",
                     "conversion_factor": 1.0,
                     "base_range": null
@@ -1232,27 +1232,27 @@
                 }
               },
               {
-                "id": "e27a4fe0-ce0f-4a57-9448-dc47c7beff00",
+                "id": "cd66961d-cfea-4e3a-bd1b-c064744e27f5",
                 "name": "Яйцо",
                 "brutto": 60.0,
                 "netto": 50.0,
                 "nomenclature": {
-                  "id": "06913964-8b10-4b7a-8710-4ff6b5375a10",
+                  "id": "20b9e781-3d7c-4be6-b6eb-55de8c51d814",
                   "name": "Яйцо",
                   "full_name": "Яйцо куриное столовое С0",
                   "group": {
-                    "id": "7677566f-7de5-4873-92bc-1f1f03ca15f6",
+                    "id": "e8da6c2c-37eb-43ec-ae05-ba901d762b78",
                     "name": "Ингредиенты"
                   },
                   "range": {
-                    "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+                    "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
                     "name": "штука",
                     "conversion_factor": 1.0,
                     "base_range": null
                   }
                 },
                 "range": {
-                  "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+                  "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
                   "name": "штука",
                   "conversion_factor": 1.0,
                   "base_range": null
@@ -1267,27 +1267,27 @@
           }
         },
         {
-          "id": "9f51c66d-b68e-419d-adb6-3c5ba75b4b01",
+          "id": "a07572f0-a122-4320-b2ed-f75053767bed",
           "name": "Коробка",
           "brutto": 20.0,
           "netto": 0.0,
           "nomenclature": {
-            "id": "dd681c4f-5972-42fa-8a0f-702a3af5f9c9",
+            "id": "7d60f0bb-fde3-4334-bfd3-b766202c6a83",
             "name": "Коробка",
             "full_name": "Коробка картонная крафтовая для печенья",
             "group": {
-              "id": "c8a9c91a-f0f9-4c7e-ace8-39b51be0d64e",
+              "id": "78f79979-6540-4087-9b76-9af541df5f51",
               "name": "Упаковка"
             },
             "range": {
-              "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+              "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
               "name": "штука",
               "conversion_factor": 1.0,
               "base_range": null
             }
           },
           "range": {
-            "id": "f2a22caa-68aa-4ad8-9eb9-cdf1cff630ce",
+            "id": "b10c21cb-b6d2-46bc-be41-c7b82b8e6a71",
             "name": "штука",
             "conversion_factor": 1.0,
             "base_range": null
