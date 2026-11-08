@@ -10,6 +10,7 @@ from src.models import (
 import json
 from src.logic.convert_factory import convert_factory
 from src.logic.deserialize_factory import deserialize_factory
+from src.logic.deserializer import deserializer
 
 """
 Центральное хранилище данных приложения (Singleton)
@@ -24,6 +25,7 @@ class storage_manager(abstract_manager):
     __storages: list = []
     __nomenclatures: list = []
     __recipes: list = []
+    __collections_map: dict = None
 
     """
     Паттерн Singleton
@@ -46,23 +48,49 @@ class storage_manager(abstract_manager):
     """
     @staticmethod
     def range_key() -> str:
-        return "ranges"
+        return range_model.__name__
 
     @staticmethod
     def group_key() -> str:
-        return "groups"
+        return nomenclature_group_model.__name__
 
     @staticmethod
     def storage_key() -> str:
-        return "storages"
+        return storage_model.__name__
 
     @staticmethod
     def nomenclature_key() -> str:
-        return "nomenclatures"
+        return nomenclature_model.__name__
 
     @staticmethod
     def recipe_key() -> str:
-        return "recipes"
+        return recipe_model.__name__
+
+    """
+    Словарь всех коллекций данных хранилища по ключам моделей
+    """
+    @property
+    def data(self) -> dict[str, list]:
+        return {
+            self.range_key(): self.__ranges,
+            self.group_key(): self.__groups,
+            self.storage_key(): self.__storages,
+            self.nomenclature_key(): self.__nomenclatures,
+            self.recipe_key(): self.__recipes,
+        }
+
+    """
+    Реестр сопоставления строкового ключа с классом доменной модели
+    """
+    @staticmethod
+    def get_model_types() -> dict[str, type]:
+        return {
+            storage_manager.range_key(): range_model,
+            storage_manager.group_key(): nomenclature_group_model,
+            storage_manager.storage_key(): storage_model,
+            storage_manager.nomenclature_key(): nomenclature_model,
+            storage_manager.recipe_key(): recipe_model,
+        }
 
     """
     Получить текущие настройки
@@ -154,17 +182,10 @@ class storage_manager(abstract_manager):
         return self.__append_unique(self.__recipes, item)
 
     """
-    Поиск сущности в хранилище по её типу и уникальному коду (ID)
-    Инкапсулирует логику доступа к коллекциям
+    Инициализация маппинга коллекций для поиска
     """
-    def find_by_id(self, entity_type: str, entity_id: str) -> object:
-        if not entity_type or not entity_id:
-            return None
-
-        t = str(entity_type).strip().lower()
-        eid = str(entity_id).strip()
-
-        collections_map = {
+    def __init_collections_map(self) -> None:
+        self.__collections_map = {
             "recipe": self.__recipes,
             "recipes": self.__recipes,
             "рецепт": self.__recipes,
@@ -187,7 +208,21 @@ class storage_manager(abstract_manager):
             "группы": self.__groups,
         }
 
-        target_collection = collections_map.get(t)
+    """
+    Поиск сущности в хранилище по её типу и уникальному коду (ID)
+    Инкапсулирует логику доступа к коллекциям
+    """
+    def find_by_id(self, entity_type: str, entity_id: str) -> object:
+        if not entity_type or not entity_id:
+            return None
+
+        t = str(entity_type).strip().lower()
+        eid = str(entity_id).strip()
+
+        if self.__collections_map is None:
+            self.__init_collections_map()
+
+        target_collection = self.__collections_map.get(t)
         if not target_collection:
             return None
 
@@ -221,6 +256,7 @@ class storage_manager(abstract_manager):
         self.__storages.clear()
         self.__nomenclatures.clear()
         self.__recipes.clear()
+        self.__collections_map = None
         self.__settings = None
 
     """
@@ -317,13 +353,7 @@ class storage_manager(abstract_manager):
     """
     def save_json(self, file_path: str = "storage_dump.json") -> str:
         factory = convert_factory()
-        data = {
-            self.range_key(): factory.convert(self.ranges),
-            self.group_key(): factory.convert(self.groups),
-            self.storage_key(): factory.convert(self.storages),
-            self.nomenclature_key(): factory.convert(self.nomenclatures),
-            self.recipe_key(): factory.convert(self.recipes),
-        }
+        data = {key: factory.convert(items) for key, items in self.data.items()}
 
         with open(file_path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
@@ -331,35 +361,25 @@ class storage_manager(abstract_manager):
         return file_path
 
     """
-    Загрузка и восстановление всех данных хранилища из JSON с использованием deserialize_factory
+    Загрузка и восстановление всех данных хранилища из JSON с использованием deserializer
     """
     def load_json(self, file_path: str = "storage_dump.json", replace: bool = True) -> bool:
         if replace:
-            self.__ranges.clear()
-            self.__groups.clear()
-            self.__storages.clear()
-            self.__nomenclatures.clear()
-            self.__recipes.clear()
+            self.clear()
 
-        factory = deserialize_factory()
-        data = factory.deserialize_file(file_path)
+        service = deserializer()
+        raw_data = service.open(file_path)
 
-        if not isinstance(data, dict):
+        if not isinstance(raw_data, dict):
             return False
 
-        for unit in data.get(self.range_key(), []):
-            self.add_range(unit)
+        model_types = self.get_model_types()
 
-        for group in data.get(self.group_key(), []):
-            self.add_group(group)
-
-        for storage in data.get(self.storage_key(), []):
-            self.add_storage(storage)
-
-        for nom in data.get(self.nomenclature_key(), []):
-            self.add_nomenclature(nom)
-
-        for recipe in data.get(self.recipe_key(), []):
-            self.add_recipe(recipe)
+        for key, model_cls in model_types.items():
+            items_data = raw_data.get(key, [])
+            restored = service.deserialize(items_data, model_cls)
+            target_collection = self.data.get(key)
+            if target_collection is not None and isinstance(restored, list):
+                target_collection.extend(restored)
 
         return True

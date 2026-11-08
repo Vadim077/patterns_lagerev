@@ -1,13 +1,14 @@
-import json
 from datetime import date, datetime
 from typing import Any, Optional
 from src.core.abstract_deserializer import abstract_deserializer
-from src.core.abstract_model import abstract_model
-from src.core.exception import arguments_exception
 from src.core.validator import validator
 from src.logic.deserializers.basic_deserializer import basic_deserializer
 from src.logic.deserializers.datetime_deserializer import datetime_deserializer
-from src.logic.deserializers.model_deserializer import model_deserializer
+from src.logic.deserializers.nomenclature_deserializer import nomenclature_deserializer
+from src.logic.deserializers.nomenclature_group_deserializer import nomenclature_group_deserializer
+from src.logic.deserializers.range_deserializer import range_deserializer
+from src.logic.deserializers.recipe_deserializer import recipe_deserializer
+from src.logic.deserializers.recipe_row_deserializer import recipe_row_deserializer
 from src.models import (
     nomenclature_group_model,
     nomenclature_model,
@@ -16,71 +17,69 @@ from src.models import (
     recipe_row_model,
     storage_model,
 )
+from src.logic.deserializers.storage_deserializer import storage_deserializer
+from src.core.abstract_deserialize_factory import abstract_deserialize_factory
 
+class deserialize_factory(abstract_deserialize_factory):
 
-class deserialize_factory:
     """
-    Фабрика десериализации данных
+    Фабрика десериализаторов
     """
 
-    def __init__(self, deserializers: list[abstract_deserializer] = None) -> None:
+    def __init__(self, service: Optional[Any] = None) -> None:
+        self.__service = service
         self.__basic_deserializer = basic_deserializer()
         self.__datetime_deserializer = datetime_deserializer()
-        self.__model_deserializer = model_deserializer(self)
 
-        # Маппинг типов на десериализаторы
-        self.__mapping: dict[type, abstract_deserializer] = {
+        self.__range_deserializer = range_deserializer(service)
+        self.__group_deserializer = nomenclature_group_deserializer(service)
+        self.__storage_deserializer = storage_deserializer(service)
+        self.__nomenclature_deserializer = nomenclature_deserializer(service)
+        self.__recipe_row_deserializer = recipe_row_deserializer(service)
+        self.__recipe_deserializer = recipe_deserializer(service)
+
+        # Реестр специализированных десериализаторов по типам
+        self._maps: dict[type, abstract_deserializer] = {
             int: self.__basic_deserializer,
             float: self.__basic_deserializer,
             str: self.__basic_deserializer,
             bool: self.__basic_deserializer,
             datetime: self.__datetime_deserializer,
             date: self.__datetime_deserializer,
-            abstract_model: self.__model_deserializer,
-            dict: self.__model_deserializer,
+            range_model: self.__range_deserializer,
+            nomenclature_group_model: self.__group_deserializer,
+            storage_model: self.__storage_deserializer,
+            nomenclature_model: self.__nomenclature_deserializer,
+            recipe_row_model: self.__recipe_row_deserializer,
+            recipe_model: self.__recipe_deserializer,
         }
 
-        # Маппинг строковых ключей коллекций верхнего уровня на классы моделей
-        self.__key_mapping: dict[str, type] = {
-            "ranges": range_model,
-            "groups": nomenclature_group_model,
-            "storages": storage_model,
-            "nomenclatures": nomenclature_model,
-            "recipes": recipe_model,
-        }
-
-        if deserializers is not None:
-            self.__deserializers = deserializers
-        else:
-            self.__deserializers = [
-                self.__basic_deserializer,
-                self.__datetime_deserializer,
-                self.__model_deserializer,
-            ]
-
     @property
-    def basic_deserializer(self) -> basic_deserializer:
-        return self.__basic_deserializer
+    def service(self) -> Optional[Any]:
+        return self.__service
 
-    @property
-    def datetime_deserializer(self) -> datetime_deserializer:
-        return self.__datetime_deserializer
+    @service.setter
+    def service(self, value: Optional[Any]) -> None:
+        self.__service = value
+        # Обновляем ссылку на сервис у десериализаторов моделей
+        self.__range_deserializer = range_deserializer(value)
+        self.__group_deserializer = nomenclature_group_deserializer(value)
+        self.__storage_deserializer = storage_deserializer(value)
+        self.__nomenclature_deserializer = nomenclature_deserializer(value)
+        self.__recipe_row_deserializer = recipe_row_deserializer(value)
+        self.__recipe_deserializer = recipe_deserializer(value)
+        self._maps[range_model] = self.__range_deserializer
+        self._maps[nomenclature_group_model] = self.__group_deserializer
+        self._maps[storage_model] = self.__storage_deserializer
+        self._maps[nomenclature_model] = self.__nomenclature_deserializer
+        self._maps[recipe_row_model] = self.__recipe_row_deserializer
+        self._maps[recipe_model] = self.__recipe_deserializer
 
-    @property
-    def model_deserializer(self) -> model_deserializer:
-        return self.__model_deserializer
-
-    def register(self, type_key: type, deserializer: abstract_deserializer) -> None:
-        """Регистрация специализированного десериализатора под новый тип"""
+    def register(self, type_key: type, handler: abstract_deserializer) -> None:
+        """Регистрация нового десериализатора под пользовательский тип"""
         validator.validate(type_key, type)
-        validator.validate(deserializer, abstract_deserializer)
-        self.__mapping[type_key] = deserializer
-
-    def register_key(self, key: str, model_type: type) -> None:
-        """Регистрация связи строкового ключа коллекции с классом модели"""
-        validator.validate(key, str)
-        validator.validate(model_type, type)
-        self.__key_mapping[key.strip().lower()] = model_type
+        validator.validate(handler, abstract_deserializer)
+        self._maps[type_key] = handler
 
     def create(self, target_type_or_data: Any) -> abstract_deserializer:
         """
@@ -91,61 +90,13 @@ class deserialize_factory:
 
         t = target_type_or_data if isinstance(target_type_or_data, type) else type(target_type_or_data)
 
-        # 1. Прямой поиск в словаре маппинга
-        if t in self.__mapping:
-            return self.__mapping[t]
+        # 1. Прямой поиск типа в реестре
+        if t in self._maps:
+            return self._maps[t]
 
-        # 2. Поиск по наследованию
-        for registered_type, deser in self.__mapping.items():
+        # 2. Поиск с учетом наследования
+        for registered_type, handler in self._maps.items():
             if issubclass(t, registered_type):
-                return deser
+                return handler
 
         return self.__basic_deserializer
-
-    def deserialize(self, data: Any, target_type: Optional[type] = None) -> Any:
-        """
-        Сквозная десериализация структуры данных, коллекций или одиночных объектов
-        """
-        if data is None:
-            return None
-
-        # 1. Списки элементов
-        if isinstance(data, (list, tuple)):
-            return [self.deserialize(item, target_type) for item in data]
-
-        # 2. Словари
-        if isinstance(data, dict):
-            # Проверяем: это словарь коллекций верхнего уровня
-            is_dump = any(k in self.__key_mapping for k in data) and all(
-                isinstance(v, list) for k, v in data.items() if k in self.__key_mapping
-            )
-            if is_dump and target_type is None:
-                res = {}
-                for k, v in data.items():
-                    model_cls = self.__key_mapping.get(k.lower())
-                    if model_cls and isinstance(v, list):
-                        res[k] = [self.deserialize(item, model_cls) for item in v]
-                    else:
-                        res[k] = self.deserialize(v)
-                return res
-
-            # Для модели передаем в model_deserializer
-            return self.__model_deserializer.deserialize(data, target_type)
-
-        # 3. Примитивы и прочие типы
-        deserializer = self.create(target_type or type(data))
-        return deserializer.deserialize(data, target_type)
-
-    def deserialize_json(self, json_string: str, target_type: Optional[type] = None) -> Any:
-        """Десериализация из JSON-строки"""
-        if not json_string or not isinstance(json_string, str):
-            raise arguments_exception(field="json_string", message="JSON строка не может быть пустой")
-        parsed = json.loads(json_string)
-        return self.deserialize(parsed, target_type)
-
-    def deserialize_file(self, file_path: str, target_type: Optional[type] = None) -> Any:
-        """Десериализация данных напрямую из JSON файла"""
-        validator.validate(file_path, str)
-        with open(file_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        return self.deserialize(data, target_type)
