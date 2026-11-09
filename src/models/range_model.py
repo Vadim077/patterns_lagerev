@@ -1,6 +1,7 @@
 from src.core.entity_model import entity_model
 from src.core.exception import arguments_exception
-
+from typing import Optional
+from src.core.abstract_deserialization_context import abstract_deserialization_context
 
 class range_model(entity_model):
     """
@@ -82,3 +83,29 @@ class range_model(entity_model):
     @staticmethod
     def create_piece() -> "range_model":
         return range_model(name="штука", conversion_factor=1.0)
+
+    @classmethod
+    def create(cls, data: dict, service: Optional[abstract_deserialization_context] = None) -> "range_model":
+        """
+        Фабричный метод создания единицы измерения из словаря.
+        """
+        if data is None or not isinstance(data, dict):
+            raise arguments_exception(field="data", message="Данные должны быть словарем")
+
+        name = data.get("name")
+        conversion_factor = float(data.get("conversion_factor", 1.0))
+
+        instance = cls(name=name, conversion_factor=conversion_factor, base_range=None)
+        item_id = data.get("id")
+        if item_id:
+            instance.id = item_id
+            if service is not None:
+                service.set_cache(cls, item_id, instance)
+
+        base_range_data = data.get("base_range")
+        if isinstance(base_range_data, dict):
+            if service is not None:
+                instance.base_range = service.deserialize(base_range_data, cls)
+            else:
+                instance.base_range = cls.create(base_range_data, service=None)
+        return instance

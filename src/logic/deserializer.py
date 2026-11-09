@@ -1,40 +1,52 @@
 import json
 from typing import Any, Optional
 from src.core.abstract_deserialize_factory import abstract_deserialize_factory
+from src.core.abstract_deserialization_context import abstract_deserialization_context
 from src.core.exception import arguments_exception
 from src.core.validator import validator
 from src.logic.deserialize_factory import deserialize_factory
-class deserializer:
+
+
+class deserializer(abstract_deserialization_context):
     """
     Координатор процесса десериализации
     """
+
     def __init__(self, factory: Optional[abstract_deserialize_factory] = None) -> None:
-        self.__cache: dict[str, Any] = {}
+        self.__cache: dict[tuple[type, str], object] = {}
         if factory is not None:
             self.__factory = factory
-            if hasattr(self.__factory, "service"):
-                self.__factory.service = self
+            self.__factory.service = self
         else:
             self.__factory = deserialize_factory(service=self)
+
     @property
     def factory(self) -> abstract_deserialize_factory:
         return self.__factory
 
-    def has_cache(self, item_id: str) -> bool:
+    def has_cache(self, model_type: type, item_id: str) -> bool:
         """Проверка наличия объекта в кэше по id"""
-        return item_id in self.__cache
+        return (model_type, item_id) in self.__cache
 
-    def get_cache(self, item_id: str) -> Optional[Any]:
+    def get_cache(self, model_type: type, item_id: str) -> Optional[object]:
         """Получение объекта из кэша по id"""
-        return self.__cache.get(item_id)
+        return self.__cache.get((model_type, item_id))
 
-    def set_cache(self, item_id: str, instance: Any) -> None:
+    def set_cache(self, model_type: type, item_id: str, instance: object) -> None:
         """Сохранение объекта в кэш"""
-        self.__cache[item_id] = instance
+        self.__cache[(model_type, item_id)] = instance
 
     def clear_cache(self) -> None:
         """Очистить кэш объектов"""
         self.__cache.clear()
+
+    def get_model_class(self, type_name: str) -> Optional[type]:
+        """Получить класс модели или DTO по имени типа через фабрику"""
+        return self.__factory.get_model_class(type_name)
+
+    def register_class(self, cls: type) -> None:
+        """Зарегистрировать новый класс в безопасном реестре фабрики"""
+        self.__factory.register_class(cls)
 
     def deserialize(self, data: Any, target_type: Optional[type] = None) -> Any:
         """
@@ -47,12 +59,18 @@ class deserializer:
         if isinstance(data, (list, tuple)):
             return [self.deserialize(item, target_type) for item in data]
 
-        # 2. Получение десериализатора через фабрику
-        actual_type = target_type or type(data)
-        handler = self.__factory.create(actual_type)
+        # 2. Определение целевого класса
+        actual_type = target_type
+        if actual_type is None and isinstance(data, dict):
+            type_name = data.get("type")
+            if type_name:
+                actual_type = self.get_model_class(type_name)
 
-        # 3. Делегирование десериализации специализированному обработчику
-        return handler.deserialize(data, target_type)
+        # 3. Подбор десериализатора через фабрику
+        handler = self.__factory.create(actual_type or type(data))
+
+        # 4. Делегирование десериализации обработчику
+        return handler.deserialize(data, actual_type)
 
     def deserialize_json(self, json_string: str, target_type: Optional[type] = None) -> Any:
         """Десериализация из JSON-строки"""

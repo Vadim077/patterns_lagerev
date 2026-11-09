@@ -2,7 +2,8 @@ from src.core.entity_model import entity_model
 from src.core.exception import arguments_exception
 from src.models.nomenclature_group_model import nomenclature_group_model
 from src.models.range_model import range_model
-
+from typing import Optional
+from src.core.abstract_deserialization_context import abstract_deserialization_context
 
 class nomenclature_model(entity_model):
     """
@@ -168,3 +169,35 @@ class nomenclature_model(entity_model):
             group=group,
             range_unit=range_unit,
         )
+    @classmethod
+    def create(cls, data: dict, service: Optional[abstract_deserialization_context] = None) -> "nomenclature_model":
+        """
+        Фабричный метод создания номенклатуры из словаря
+        """
+        if data is None or not isinstance(data, dict):
+            raise arguments_exception(field="data", message="Данные должны быть словарем")
+
+        instance = cls(
+            name=data.get("name"),
+            full_name=data.get("full_name"),
+        )
+        item_id = data.get("id")
+        if item_id:
+            instance.id = item_id
+            if service is not None:
+                service.set_cache(cls, item_id, instance)
+
+        group_data = data.get("group")
+        if isinstance(group_data, dict):
+            if service is not None:
+                instance.group = service.deserialize(group_data, nomenclature_group_model)
+            else:
+                instance.group = nomenclature_group_model.create(group_data, service=None)
+
+        range_data = data.get("range")
+        if isinstance(range_data, dict):
+            if service is not None:
+                instance.range = service.deserialize(range_data, range_model)
+            else:
+                instance.range = range_model.create(range_data, service=None)
+        return instance

@@ -2,12 +2,15 @@ from src.core.abstract_model import abstract_model
 from src.core.exception import arguments_exception
 from src.models.nomenclature_model import nomenclature_model
 from src.models.recipe_row_model import recipe_row_model
-
+from typing import Optional
+from src.core.abstract_deserialization_context import abstract_deserialization_context
 
 """
 Модель технологической карты (рецепта)
 """
 class recipe_model(abstract_model):
+
+    SERIALIZATION_EXCLUDED_FIELDS = ("items",)
 
     def __init__(
         self,
@@ -187,3 +190,48 @@ class recipe_model(abstract_model):
         # Упаковка: 20 г брутто (вес коробки) / 0 г нетто (тара не съедобна)
         recipe.add_row(recipe_row_model.create_ingredient(box_packaging, brutto=20.0, netto=0.0))
         return recipe
+
+    @classmethod
+    def create(cls, data: dict, service: Optional[abstract_deserialization_context] = None) -> "recipe_model":
+        """
+        Фабричный метод создания технологической карты из словаря
+        """
+        if data is None or not isinstance(data, dict):
+            raise arguments_exception(field="data", message="Данные должны быть словарем")
+
+        name = data.get("name", "")
+        cooking_time = int(data.get("cooking_time", 0))
+        instructions = data.get("instructions", [])
+        portions = int(data.get("portions", 1))
+
+        instance = cls(
+            name=name,
+            cooking_time=cooking_time,
+            instructions=instructions,
+            portions=portions,
+        )
+
+        item_id = data.get("id")
+        if item_id:
+            instance.id = item_id
+            if service is not None:
+                service.set_cache(cls, item_id, instance)
+
+        dish_data = data.get("dish")
+        if isinstance(dish_data, dict):
+            if service is not None:
+                instance.dish = service.deserialize(dish_data, nomenclature_model)
+            else:
+                instance.dish = nomenclature_model.create(dish_data, service=None)
+
+        rows_data = data.get("rows", [])
+        for row_dict in rows_data:
+            if isinstance(row_dict, dict):
+                if service is not None:
+                    row_instance = service.deserialize(row_dict, recipe_row_model)
+                else:
+                    row_instance = recipe_row_model.create(row_dict, service=None)
+                if row_instance is not None:
+                    instance.add_row(row_instance)
+
+        return instance

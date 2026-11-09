@@ -1,5 +1,7 @@
 from src.core.entity_model import entity_model
-
+from src.core.abstract_deserialization_context import abstract_deserialization_context
+from src.core.exception import arguments_exception
+from typing import Optional
 
 class storage_model(entity_model):
     """Модель склада"""
@@ -21,3 +23,18 @@ class storage_model(entity_model):
     @staticmethod
     def create_cold() -> "storage_model":
         return storage_model(name="Холодильник")
+
+    @classmethod
+    def create(cls, data: dict, service: Optional[abstract_deserialization_context] = None) -> "storage_model":
+        """
+        Фабричный метод создания склада из словаря.
+        """
+        if data is None or not isinstance(data, dict):
+            raise arguments_exception(field="data", message="Данные должны быть словарем")
+        instance = cls(name=data.get("name"))
+        item_id = data.get("id")
+        if item_id:
+            instance.id = item_id
+            if service is not None:
+                service.set_cache(cls, item_id, instance)
+        return instance

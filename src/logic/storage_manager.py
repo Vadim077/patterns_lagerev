@@ -9,7 +9,6 @@ from src.models import (
 )
 import json
 from src.logic.convert_factory import convert_factory
-from src.logic.deserialize_factory import deserialize_factory
 from src.logic.deserializer import deserializer
 
 """
@@ -77,19 +76,6 @@ class storage_manager(abstract_manager):
             self.storage_key(): self.__storages,
             self.nomenclature_key(): self.__nomenclatures,
             self.recipe_key(): self.__recipes,
-        }
-
-    """
-    Реестр сопоставления строкового ключа с классом доменной модели
-    """
-    @staticmethod
-    def get_model_types() -> dict[str, type]:
-        return {
-            storage_manager.range_key(): range_model,
-            storage_manager.group_key(): nomenclature_group_model,
-            storage_manager.storage_key(): storage_model,
-            storage_manager.nomenclature_key(): nomenclature_model,
-            storage_manager.recipe_key(): recipe_model,
         }
 
     """
@@ -373,13 +359,11 @@ class storage_manager(abstract_manager):
         if not isinstance(raw_data, dict):
             return False
 
-        model_types = self.get_model_types()
-
-        for key, model_cls in model_types.items():
+        for key, target_collection in self.data.items():
             items_data = raw_data.get(key, [])
-            restored = service.deserialize(items_data, model_cls)
-            target_collection = self.data.get(key)
-            if target_collection is not None and isinstance(restored, list):
-                target_collection.extend(restored)
+            restored = service.deserialize(items_data)
+            if not isinstance(restored, list):
+                raise arguments_exception(field=key, message="Коллекция в JSON должна быть списком")
+            target_collection.extend(restored)
 
         return True

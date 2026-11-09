@@ -35,7 +35,8 @@ class reference_convertor(abstract_convertor):
         self.__visited.add(source_id)
 
         try:
-            for field in self.get_fields(source):
+            excluded_fields = getattr(type(source), "SERIALIZATION_EXCLUDED_FIELDS", ())
+            for field in self.get_fields(source, exclude=excluded_fields):
                 val = getattr(source, field)
 
                 # 1. Если свойство - список/кортеж (строки рецепта)
