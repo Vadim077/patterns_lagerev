@@ -1,18 +1,16 @@
-import json
 from src.core.abstract_manager import abstract_manager
-from src.core.validator import validator, operation_exception
+from src.core.validator import operation_exception, validator
+from src.logic.deserializer import deserializer
 from src.models.settings_model import settings_model
-from src.models.organization_model import organization_model
 
 
 """
-Менеджер настроек (Singleton)
+Менеджер настроек Singleton
 """
 class settings_manager(abstract_manager):
 
     __default_file_name: str = "settings.json"
     __settings: settings_model = None
-    __data: dict = {}
     __is_loaded: bool = False
 
     """
@@ -21,74 +19,50 @@ class settings_manager(abstract_manager):
     def __new__(cls):
         if not hasattr(cls, "instance"):
             cls.instance = super(settings_manager, cls).__new__(cls)
+
         return cls.instance
 
     """
-    Загрузка данных из JSON файла
+    Загрузка настроек через общий механизм десериализации
     """
-    def load(self, file_name: str = ""):
-        inner_file_name = file_name.strip() if file_name and file_name.strip() != "" else self.__default_file_name
-        validator.validate(inner_file_name)
+    def load(self, file_name: str = "") -> None:
+        inner_file_name = (
+            file_name.strip()
+            if file_name and file_name.strip()
+            else self.__default_file_name
+        )
+
+        validator.validate(inner_file_name, str)
 
         try:
-            with open(inner_file_name, "r", encoding="utf-8") as file:
-                self.__data = json.load(file)
-                self.__is_loaded = self.convert()
-        except Exception as ex:
-            raise operation_exception(f"Ошибка при загрузке и обработке файла: {inner_file_name}. Детали: {ex}")
+            service = deserializer()
+
+            loaded_settings = service.deserialize_file(
+                inner_file_name,
+                settings_model,
+            )
+
+            if not isinstance(loaded_settings, settings_model):
+                raise operation_exception(
+                    "Десериализатор вернул некорректную модель настроек"
+                )
+
+            self.__settings = loaded_settings
+            self.__is_loaded = True
+
+        except Exception as exception:
+            self.__is_loaded = False
+
+            raise operation_exception(
+                "Ошибка при загрузке и обработке файла "
+                f"{inner_file_name}. Детали: {exception}"
+            ) from exception
 
     """
-    Обработка загруженных данных в модель settings_model
+    Обработка настроек
     """
     def convert(self) -> bool:
-        if not self.__data or not isinstance(self.__data, dict):
-            return False
-
-        self.__settings = settings_model()
-
-        if "boss_name" in self.__data:
-            self.__settings.boss_name = self.__data["boss_name"]
-
-        if "account_name" in self.__data:
-            self.__settings.account_name = self.__data["account_name"]
-
-        if "is_first_start" in self.__data:
-            self.__settings.is_first_start = bool(self.__data["is_first_start"])
-
-        if "response_format" in self.__data:
-            self.__settings.response_format = self.__data["response_format"]
-
-        if "company" in self.__data and isinstance(self.__data["company"], dict):
-            comp = self.__data["company"]
-            org = organization_model()
-            if comp.get("name"):
-                try:
-                    org.name = comp["name"]
-                except Exception:
-                    pass
-            if comp.get("inn"):
-                try:
-                    org.inn = comp["inn"]
-                except Exception:
-                    pass
-            if comp.get("bik"):
-                try:
-                    org.bik = comp["bik"]
-                except Exception:
-                    pass
-            if comp.get("account"):
-                try:
-                    org.account = comp["account"]
-                except Exception:
-                    pass
-            if comp.get("ownership_type"):
-                try:
-                    org.ownership_type = comp["ownership_type"]
-                except Exception:
-                    pass
-            self.__settings.company = org
-
-        return True
+        return self.__is_loaded
 
     """
     Получить модель настроек
@@ -98,7 +72,7 @@ class settings_manager(abstract_manager):
         return self.__settings
 
     """
-    Флаг успешности загрузки
+    Получить статус загрузки настроек
     """
     @property
     def is_loaded(self) -> bool:
