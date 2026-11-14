@@ -1,0 +1,225 @@
+openapi: 3.0.0
+
+info:
+  title: Patterns REST API
+  version: "1.0.0"
+  description: REST API проекта ООО "Ромашка"
+
+servers:
+  - url: http://localhost:8080
+    description: Локальный сервер
+
+paths:
+  /api/report-formats:
+    get:
+      summary: Получить список форматов отчётов
+      operationId: main.get_report_formats
+      responses:
+        "200":
+          description: Список форматов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /api/entities:
+    get:
+      summary: Получить список доменных сущностей
+      operationId: main.list_entities
+      responses:
+        "200":
+          description: Списки сущностей
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/entities/{entity_type}/{entity_id}:
+    parameters:
+      - name: entity_type
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Тип доменной сущности
+
+      - name: entity_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Уникальный идентификатор сущности
+
+    put:
+      summary: Создать доменную сущность
+      operationId: main.put_entity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "201":
+          description: Сущность создана
+          content:
+            application/json:
+              schema:
+                type: object
+
+        "400":
+          description: Некорректные данные
+
+        "409":
+          description: Сущность уже существует
+
+        "500":
+          description: Связанная сущность отсутствует
+
+    get:
+      summary: Получить карточку сущности
+      operationId: main.get_entity
+      responses:
+        "200":
+          description: JSON-карточка сущности
+          content:
+            application/json:
+              schema:
+                type: object
+
+        "400":
+          description: Некорректный тип сущности
+
+        "404":
+          description: Сущность не найдена
+
+    patch:
+      summary: Частично обновить сущность
+      operationId: main.patch_entity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Сущность обновлена
+          content:
+            application/json:
+              schema:
+                type: object
+
+        "400":
+          description: Ошибка валидации или изменение ID
+
+        "404":
+          description: Сущность не найдена
+
+        "500":
+          description: Связанная сущность отсутствует
+
+    delete:
+      summary: Удалить сущность
+      operationId: main.delete_entity
+      responses:
+        "200":
+          description: Сущность удалена
+          content:
+            application/json:
+              schema:
+                type: object
+
+        "404":
+          description: Сущность не найдена
+
+        "409":
+          description: Сущность используется другими объектами
+
+  /api/report/{format_name}/{entity_type}/{entity_id}:
+    get:
+      summary: Получить отчёт в заданном формате
+      operationId: main.get_report_by_format
+      parameters:
+        - name: format_name
+          in: path
+          required: true
+          schema:
+            type: string
+
+        - name: entity_type
+          in: path
+          required: true
+          schema:
+            type: string
+
+        - name: entity_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Сформированный отчёт
+
+        "404":
+          description: Сущность не найдена
+
+  /api/report/default/{entity_type}/{entity_id}:
+    get:
+      summary: Получить отчёт в формате по умолчанию
+      operationId: main.get_report_default
+      parameters:
+        - name: entity_type
+          in: path
+          required: true
+          schema:
+            type: string
+
+        - name: entity_id
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Сформированный отчёт
+
+        "404":
+          description: Сущность не найдена
+
+  /api/get_report:
+    get:
+      summary: Получить отчёт через query-параметры
+      operationId: main.get_report_query
+      parameters:
+        - name: format
+          in: query
+          required: false
+          schema:
+            type: string
+
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Сформированный отчёт
+
+        "400":
+          description: Некорректные параметры
+
+        "404":
+          description: Сущность не найдена

@@ -184,6 +184,11 @@ class storage_manager(abstract_manager):
             "единица": self.__ranges,
             "единицы": self.__ranges,
             "единица_измерения": self.__ranges,
+            "range_model": self.__ranges,
+            "nomenclature_group_model": self.__groups,
+            "storage_model": self.__storages,
+            "nomenclature_model": self.__nomenclatures,
+            "recipe_model": self.__recipes,
             "storage": self.__storages,
             "storages": self.__storages,
             "склад": self.__storages,
@@ -209,7 +214,7 @@ class storage_manager(abstract_manager):
             self.__init_collections_map()
 
         target_collection = self.__collections_map.get(t)
-        if not target_collection:
+        if target_collection is None:
             return None
 
         for item in target_collection:
@@ -217,6 +222,40 @@ class storage_manager(abstract_manager):
                 return item
 
         return None
+
+    def get_collection(self, entity_type: str) -> list:
+        """Возвращает коллекцию по типу доменной сущности"""
+        if self.__collections_map is None:
+            self.__init_collections_map()
+
+        collection = self.__collections_map.get(entity_type.strip().lower())
+
+        if collection is None:
+            raise ValueError(
+                f"Коллекция для типа '{entity_type}' не найдена"
+            )
+
+        return collection
+
+    def add_entity(self, entity_type: str, item: object) -> bool:
+        """Добавляет доменную сущность в соответствующую коллекцию"""
+        collection = self.get_collection(entity_type)
+
+        if item is None:
+            return False
+
+        return self.__append_unique(collection, item)
+
+    def remove_entity(self, entity_type: str, entity_id: str) -> bool:
+        """Удаляет сущность по типу и уникальному идентификатору"""
+        collection = self.get_collection(entity_type)
+        entity = self.find_by_id(entity_type, entity_id)
+
+        if entity is None:
+            return False
+
+        collection.remove(entity)
+        return True
 
     """
     Переопределенный метод обработки данных
