@@ -3,7 +3,8 @@ from src.core.exception import arguments_exception
 from src.core.validator import validator
 from src.models.nomenclature_model import nomenclature_model
 from src.models.range_model import range_model
-
+from typing import Optional
+from src.core.abstract_deserialization_context import abstract_deserialization_context
 
 """
 Модель строки технологической карты (ингредиент или полуфабрикат)
@@ -139,3 +140,52 @@ class recipe_row_model(abstract_model):
             range_unit=range_unit,
             sub_recipe=sub_recipe,
         )
+
+    @classmethod
+    def create(cls, data: dict, service: Optional[abstract_deserialization_context] = None) -> "recipe_row_model":
+        """
+        Фабричный метод создания строки рецепта из словаря
+        """
+        if data is None or not isinstance(data, dict):
+            raise arguments_exception(field="data", message="Данные должны быть словарем")
+
+        nom_data = data.get("nomenclature")
+        nomenclature = None
+        if isinstance(nom_data, dict):
+            if service is not None:
+                nomenclature = service.deserialize(nom_data, nomenclature_model)
+            else:
+                nomenclature = nomenclature_model.create(nom_data, service=None)
+
+        range_data = data.get("range")
+        range_unit = None
+        if isinstance(range_data, dict):
+            if service is not None:
+                range_unit = service.deserialize(range_data, range_model)
+            else:
+                range_unit = range_model.create(range_data, service=None)
+
+        brutto = float(data.get("brutto", 0.0))
+        netto_raw = data.get("netto")
+        netto = float(netto_raw) if netto_raw is not None else brutto
+
+        instance = cls(
+            nomenclature=nomenclature,
+            brutto=brutto,
+            netto=netto,
+            range_unit=range_unit,
+        )
+        item_id = data.get("id")
+        if item_id:
+            instance.id = item_id
+            if service is not None:
+                service.set_cache(cls, item_id, instance)
+
+        sub_recipe_data = data.get("sub_recipe")
+        if isinstance(sub_recipe_data, dict):
+            from src.models.recipe_model import recipe_model
+            if service is not None:
+                instance.sub_recipe = service.deserialize(sub_recipe_data, recipe_model)
+            else:
+                instance.sub_recipe = recipe_model.create(sub_recipe_data, service=None)
+        return instance

@@ -288,10 +288,8 @@ def test_storage_manager_json_dump():
     with open(saved_file, "r", encoding="utf-8") as f:
         loaded = json.load(f)
 
-    assert "ranges" in loaded
-    assert "groups" in loaded
-    assert "storages" in loaded
-    assert "nomenclatures" in loaded
-    assert "recipes" in loaded
-    assert len(loaded["recipes"]) >= 2
-    assert len(loaded["nomenclatures"]) >= 4
+    # Проверяем наличие всех ключей моделей хранилища
+    for key in storage.data.keys():
+        assert key in loaded
+    assert len(loaded[storage.recipe_key()]) >= 2
+    assert len(loaded[storage.nomenclature_key()]) >= 4
