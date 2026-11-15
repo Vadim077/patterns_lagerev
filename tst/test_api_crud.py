@@ -60,11 +60,11 @@ def test_get_entities(client):
 
     # Подготовка
     expected_keys = [
-        "groups",
-        "storages",
-        "recipes",
-        "nomenclatures",
-        "ranges",
+        "range_model",
+        "nomenclature_group_model",
+        "storage_model",
+        "nomenclature_model",
+        "recipe_model",
     ]
 
     # Действие

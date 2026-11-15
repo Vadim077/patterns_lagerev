@@ -188,3 +188,17 @@ cython_debug/
 # Built Visual Studio Code Extensions
 *.vsix
 
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Временные файлы тестов
+.pytest_tmp/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Локальные логи
+*.log

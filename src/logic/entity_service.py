@@ -1,10 +1,10 @@
-from copy import copy
-from typing import Any, Callable
+from typing import Any
 
 from src.logic.convert_factory import convert_factory
 from src.logic.deserializer import deserializer
 from src.logic.entity_dependency_checker import entity_dependency_checker
 from src.logic.entity_factory import entity_factory
+from src.logic.entity_repository import entity_repository
 from src.logic.storage_manager import storage_manager
 
 
@@ -19,71 +19,32 @@ class entity_service:
         factory: entity_factory = None,
         converter: convert_factory = None,
         checker: entity_dependency_checker = None,
+        repository: entity_repository = None,
     ) -> None:
         self.__storage = storage
         self.__factory = factory or entity_factory()
         self.__converter = converter or convert_factory()
         self.__checker = checker or entity_dependency_checker(storage)
-
-        self.__patch_handlers: dict[
-            str,
-            dict[str, Callable[[object, Any], None]],
-        ] = {
-            "range_model": {
-                "name": self.__set_name,
-                "conversion_factor": self.__set_conversion_factor,
-                "base_range_id": self.__set_base_range,
-            },
-            "nomenclature_group_model": {
-                "name": self.__set_name,
-            },
-            "storage_model": {
-                "name": self.__set_name,
-            },
-            "nomenclature_model": {
-                "name": self.__set_name,
-                "full_name": self.__set_full_name,
-                "group_id": self.__set_group,
-                "range_id": self.__set_range,
-            },
-            "recipe_model": {
-                "name": self.__set_name,
-                "cooking_time": self.__set_cooking_time,
-                "instructions": self.__set_instructions,
-                "portions": self.__set_portions,
-                "dish_id": self.__set_dish,
-            },
-        }
+        self.__repository = repository or entity_repository(storage)
 
     """
     Создать контекст десериализации с объектами из хранилища
     """
-    def __create_deserialization_context(self) -> deserializer:
+    def __create_deserialization_context(
+        self,
+        excluded: tuple[tuple[type, str], ...] = (),
+    ) -> deserializer:
         context = deserializer()
 
         for entity_type, collection in self.__storage.data.items():
             model_class = self.__factory.get_model_class(entity_type)
 
             for entity in collection:
+                if (model_class, entity.id) in excluded:
+                    continue
                 context.set_cache(model_class, entity.id, entity)
 
         return context
-
-    """
-    Найти связанную сущность по типу и идентификатору
-    """
-    def __get_reference(self, entity_type: str, entity_id: str) -> object:
-        self.__factory.get_model_class(entity_type)
-
-        reference = self.__storage.find_by_id(entity_type, entity_id)
-
-        if reference is None:
-            raise LookupError(
-                f"Связанная сущность '{entity_type}' "
-                f"с ID '{entity_id}' не найдена"
-            )
-
-        return reference
 
     """
     Получить сущность по типу и идентификатору
@@ -158,7 +119,7 @@ class entity_service:
 
         self.__checker.validate_new_entity(entity_type, entity)
 
-        if not self.__storage.add_entity(entity_type, entity):
+        if not self.__repository.add(entity_type, entity):
             raise ValueError("Сущность не была добавлена в хранилище")
 
         return self.__converter.convert(entity)
@@ -185,33 +146,25 @@ class entity_service:
                 f"Сущность '{entity_type}' с ID '{entity_id}' не найдена"
             )
 
-        handlers = self.__patch_handlers.get(entity_type)
+        model_class = self.__factory.get_model_class(entity_type)
+        current_data = self.__converter.convert(entity)
+        patch_data = self.__normalize_patch_references(entity, data)
+        merged_data = {**current_data, **patch_data}
 
-        if handlers is None:
-            self.__factory.get_model_class(entity_type)
-            raise ValueError(
-                f"Для типа '{entity_type}' не определены поля обновления"
-            )
+        context = self.__create_deserialization_context(
+            excluded=((model_class, entity.id),),
+        )
+        candidate = context.deserialize(merged_data, model_class)
 
-        unknown_fields = set(data) - set(handlers)
-
-        if unknown_fields:
-            raise ValueError(
-                f"Запрещённые поля обновления: "
-                f"{', '.join(sorted(unknown_fields))}"
-            )
-
-        candidate = copy(entity)
-
-        for field_name, value in data.items():
-            handlers[field_name](candidate, value)
+        if candidate is None or not isinstance(candidate, model_class):
+            raise ValueError("Не удалось обновить доменную сущность")
 
         self.__checker.validate_new_entity(entity_type, candidate)
 
-        for field_name, value in data.items():
-            handlers[field_name](entity, value)
+        if not self.__repository.replace(entity_type, entity_id, candidate):
+            raise ValueError("Сущность не была обновлена")
 
-        return self.__converter.convert(entity)
+        return self.__converter.convert(candidate)
 
     """
     Удалить сущность после проверки зависимостей
@@ -230,7 +183,7 @@ class entity_service:
                 f"с ID '{entity_id}', потому что она используется"
             )
 
-        if not self.__storage.remove_entity(entity_type, entity_id):
+        if not self.__repository.remove(entity_type, entity_id):
             raise ValueError("Сущность не была удалена")
 
         return {
@@ -239,80 +192,51 @@ class entity_service:
             "id": entity_id,
         }
 
-    """
-    Установить имя сущности
-    """
-    @staticmethod
-    def __set_name(entity: object, value: Any) -> None:
-        entity.name = value
+    def __normalize_patch_references(
+        self,
+        entity: object,
+        data: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Преобразует идентификаторы ссылок в данные доменных моделей."""
+        normalized = dict(data)
 
-    """
-    Установить полное имя номенклатуры
-    """
-    @staticmethod
-    def __set_full_name(entity: object, value: Any) -> None:
-        entity.full_name = value
+        for field_name, value in tuple(data.items()):
+            if not field_name.endswith("_id"):
+                continue
 
-    """
-    Установить коэффициент единицы измерения
-    """
-    @staticmethod
-    def __set_conversion_factor(entity: object, value: Any) -> None:
-        entity.conversion_factor = value
+            property_name = field_name[:-3]
+            if not hasattr(entity, property_name):
+                raise ValueError(
+                    f"Поле '{field_name}' не поддерживается для PATCH"
+                )
 
-    """
-    Установить базовую единицу измерения
-    """
-    def __set_base_range(self, entity: object, value: Any) -> None:
-        entity.base_range = self.__get_reference(
-            "range_model",
-            value,
-        )
+            reference = self.__find_reference(entity, property_name, value)
+            if reference is None:
+                raise LookupError(
+                    f"Связанная сущность с ID '{value}' не найдена"
+                )
 
-    """
-    Установить группу номенклатуры
-    """
-    def __set_group(self, entity: object, value: Any) -> None:
-        entity.group = self.__get_reference(
-            "nomenclature_group_model",
-            value,
-        )
+            normalized[property_name] = self.__converter.convert(reference)
+            normalized.pop(field_name)
 
-    """
-    Установить единицу измерения номенклатуры
-    """
-    def __set_range(self, entity: object, value: Any) -> None:
-        entity.range = self.__get_reference(
-            "range_model",
-            value,
-        )
+        return normalized
 
-    """
-    Установить время приготовления
-    """
-    @staticmethod
-    def __set_cooking_time(entity: object, value: Any) -> None:
-        entity.cooking_time = value
+    def __find_reference(
+        self,
+        entity: object,
+        property_name: str,
+        entity_id: Any,
+    ) -> object:
+        """Ищет связанную сущность по идентификатору во всех коллекциях."""
+        current_reference = getattr(entity, property_name, None)
 
-    """
-    Установить инструкции рецепта
-    """
-    @staticmethod
-    def __set_instructions(entity: object, value: Any) -> None:
-        entity.instructions = value
+        if current_reference is not None:
+            reference_type = type(current_reference).__name__
+            return self.__storage.find_by_id(reference_type, str(entity_id))
 
-    """
-    Установить количество порций
-    """
-    @staticmethod
-    def __set_portions(entity: object, value: Any) -> None:
-        entity.portions = value
+        for entity_type in self.__storage.data:
+            reference = self.__storage.find_by_id(entity_type, str(entity_id))
+            if reference is not None:
+                return reference
 
-    """
-    Установить блюдо рецепта
-    """
-    def __set_dish(self, entity: object, value: Any) -> None:
-        entity.dish = self.__get_reference(
-            "nomenclature_model",
-            value,
-        )
+        return None

@@ -10,6 +10,7 @@ from src.models import (
 import json
 from src.logic.convert_factory import convert_factory
 from src.logic.deserializer import deserializer
+from src.core.exception import arguments_exception
 
 """
 Центральное хранилище данных приложения (Singleton)
@@ -236,26 +237,6 @@ class storage_manager(abstract_manager):
             )
 
         return collection
-
-    def add_entity(self, entity_type: str, item: object) -> bool:
-        """Добавляет доменную сущность в соответствующую коллекцию"""
-        collection = self.get_collection(entity_type)
-
-        if item is None:
-            return False
-
-        return self.__append_unique(collection, item)
-
-    def remove_entity(self, entity_type: str, entity_id: str) -> bool:
-        """Удаляет сущность по типу и уникальному идентификатору"""
-        collection = self.get_collection(entity_type)
-        entity = self.find_by_id(entity_type, entity_id)
-
-        if entity is None:
-            return False
-
-        collection.remove(entity)
-        return True
 
     """
     Переопределенный метод обработки данных

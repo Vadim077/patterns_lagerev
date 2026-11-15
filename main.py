@@ -77,30 +77,7 @@ def get_report_formats():
 
 @api.route("/api/entities", methods=["GET"])
 def list_entities():
-    return flask.jsonify(
-        {
-            "groups": [
-                {"id": group.id, "name": group.name}
-                for group in storage_mgr.groups
-            ],
-            "storages": [
-                {"id": storage.id, "name": storage.name}
-                for storage in storage_mgr.storages
-            ],
-            "recipes": [
-                {"id": recipe.id, "name": recipe.name}
-                for recipe in storage_mgr.recipes
-            ],
-            "nomenclatures": [
-                {"id": nomenclature.id, "name": nomenclature.name}
-                for nomenclature in storage_mgr.nomenclatures
-            ],
-            "ranges": [
-                {"id": range_item.id, "name": range_item.name}
-                for range_item in storage_mgr.ranges
-            ],
-        }
-    ), 200
+    return flask.jsonify(crud_service.list_all()), 200
 
 
 @api.route(
