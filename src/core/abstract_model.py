@@ -35,6 +35,16 @@ class name_id(ABC):
         self._id = value.strip()
 
     @property
+    def unique_code(self) -> str:
+        """Уникальный код сущности (синоним id)."""
+        return self._id
+
+    @unique_code.setter
+    def unique_code(self, value: str) -> None:
+        """Установить уникальный код сущности."""
+        self.id = value
+
+    @property
     def name(self) -> str:
         """Получить наименование."""
         return self._name

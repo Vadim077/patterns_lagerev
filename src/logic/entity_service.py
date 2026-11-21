@@ -6,6 +6,7 @@ from src.logic.entity_dependency_checker import entity_dependency_checker
 from src.logic.entity_factory import entity_factory
 from src.logic.entity_repository import entity_repository
 from src.logic.storage_manager import storage_manager
+from src.logic.storage_reposity import storage_repository
 
 
 class entity_service:
@@ -20,12 +21,15 @@ class entity_service:
         converter: convert_factory = None,
         checker: entity_dependency_checker = None,
         repository: entity_repository = None,
+        dependency_repository: storage_repository = None,
     ) -> None:
         self.__storage = storage
         self.__factory = factory or entity_factory()
         self.__converter = converter or convert_factory()
         self.__checker = checker or entity_dependency_checker(storage)
         self.__repository = repository or entity_repository(storage)
+        self.__dependency_repository = dependency_repository or storage.repository
+        self.__dependency_repository.rebuild(storage)
 
     """
     Создать контекст десериализации с объектами из хранилища
@@ -122,6 +126,8 @@ class entity_service:
         if not self.__repository.add(entity_type, entity):
             raise ValueError("Сущность не была добавлена в хранилище")
 
+        self.__dependency_repository.rebuild(self.__storage)
+
         return self.__converter.convert(entity)
 
     """
@@ -164,6 +170,8 @@ class entity_service:
         if not self.__repository.replace(entity_type, entity_id, candidate):
             raise ValueError("Сущность не была обновлена")
 
+        self.__dependency_repository.rebuild(self.__storage)
+
         return self.__converter.convert(candidate)
 
     """
@@ -177,7 +185,7 @@ class entity_service:
                 f"Сущность '{entity_type}' с ID '{entity_id}' не найдена"
             )
 
-        if self.__checker.is_used(entity_type, entity):
+        if not self.__dependency_repository.can_delete(entity):
             raise PermissionError(
                 f"Нельзя удалить сущность '{entity_type}' "
                 f"с ID '{entity_id}', потому что она используется"
@@ -185,6 +193,8 @@ class entity_service:
 
         if not self.__repository.remove(entity_type, entity_id):
             raise ValueError("Сущность не была удалена")
+
+        self.__dependency_repository.rebuild(self.__storage)
 
         return {
             "deleted": True,

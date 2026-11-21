@@ -80,6 +80,11 @@ def list_entities():
     return flask.jsonify(crud_service.list_all()), 200
 
 
+@api.route("/api/get_entities", methods=["GET"])
+def get_entities():
+    return flask.jsonify(storage_mgr.domains()), 200
+
+
 @api.route(
     "/api/entities/<entity_type>/<entity_id>",
     methods=["PUT"],
