@@ -255,6 +255,49 @@ paths:
         "500":
           description: Внутренняя ошибка сервера
 
+  /api/filter/{entity_type}/schema:
+    parameters:
+      - name: entity_type
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Тип доменной сущности
+    get:
+      summary: Получить схему доступных полей для фильтрации сущности
+      operationId: main.get_filter_schema
+      responses:
+        "200":
+          description: Схема полей фильтрации
+        "404":
+          description: Неизвестный тип сущности
+        "500":
+          description: Внутренняя ошибка сервера
+
+  /api/osv:
+    post:
+      summary: Сформировать Оборотно-сальдовую ведомость (ОСВ) через шаблон Прототип
+      operationId: main.get_turnover_balance_sheet
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterDto'
+      responses:
+        "200":
+          description: Строки оборотно-сальдовой ведомости
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TurnoverRowDto'
+        "400":
+          description: Некорректные параметры запроса
+        "500":
+          description: Внутренняя ошибка сервера
+
   /api/report/osv:
     post:
       summary: Сформировать Оборотно-сальдовую ведомость (ОСВ) через шаблон Прототип

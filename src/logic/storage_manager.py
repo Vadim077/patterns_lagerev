@@ -336,7 +336,7 @@ class storage_manager(abstract_manager):
             self.__repository.clear()
 
     """
-    Генерация базовых и производных единиц измерения через фабричные методы
+    Инициализация базовых и производных единиц измерения через фабричные методы
     """
     def __init_ranges(self) -> None:
         kg = range_model.create_kilogramm()
@@ -349,7 +349,7 @@ class storage_manager(abstract_manager):
             self.add_range(unit)
 
     """
-    Генерация групп номенклатуры через фабричные методы
+    Инициализация групп номенклатуры через фабричные методы
     """
     def __init_groups(self) -> None:
         group_raw = nomenclature_group_model.create_raw()
@@ -362,7 +362,7 @@ class storage_manager(abstract_manager):
             self.add_group(group)
 
     """
-    Генерация складов через фабричные методы
+    Инициализация складов через фабричные методы
     """
     def __init_storages(self) -> None:
         storage_main = storage_model.create_main()
@@ -372,7 +372,7 @@ class storage_manager(abstract_manager):
             self.add_storage(storage)
 
     """
-    Генерация номенклатуры через фабричные методы
+    Инициализация номенклатуры через фабричные методы
     """
     def __init_nomenclatures(self) -> None:
         group_raw = next((g for g in self.__groups if g.name == "Сырье"), self.__groups[0])
@@ -402,7 +402,7 @@ class storage_manager(abstract_manager):
             self.add_nomenclature(item)
 
     """
-    Генерация рецептов (технологических карт) согласно docs/recipe.md
+    Инициализация рецептов (технологических карт) согласно docs/recipe.md
     """
     def __init_recipes(self) -> None:
         flour = next((n for n in self.__nomenclatures if n.name == "Мука"), None)
@@ -425,7 +425,7 @@ class storage_manager(abstract_manager):
         self.add_recipe(cookie_recipe)
 
     """
-    Генерация складских транзакций (движений)
+    Инициализация складских транзакций (движений)
     """
     def __init_transactions(self) -> None:
         if not self.__storages or not self.__nomenclatures:

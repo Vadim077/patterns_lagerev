@@ -289,6 +289,10 @@ def filter_entities(entity_type: str):
     "/api/reports/turnover-balance-sheet",
     methods=["POST"],
 )
+@api.route(
+    "/api/osv",
+    methods=["POST"],
+)
 def get_turnover_balance_sheet():
     try:
         body = flask.request.get_json(silent=True) or {}
@@ -305,6 +309,31 @@ def get_turnover_balance_sheet():
         return _report_error(str(ex), 400)
     except Exception as ex:
         return _report_error(str(ex), 500)
+
+
+@api.route(
+    "/api/filter/<entity_type>/schema",
+    methods=["GET"],
+)
+def get_filter_schema(entity_type: str):
+    try:
+        clean_type = str(entity_type).strip().lower()
+        storage_mgr.get_collection(clean_type)
+        schema = {
+            "available_fields": ["name", "id", "unique_code"],
+            "nested_search_supported": ["group", "range", "storage", "base_range", "recipe"],
+            "filterable_nested_fields": [
+                {"field": "group", "nested_fields": ["name", "id"]},
+                {"field": "range", "nested_fields": ["name", "id"]},
+                {"field": "storage", "nested_fields": ["name", "id"]},
+                {"field": "base_range", "nested_fields": ["name", "id"]},
+            ],
+        }
+        return flask.jsonify(schema), 200
+    except (ValueError, arguments_exception) as ex:
+        return _error(str(ex), 404)
+    except Exception as ex:
+        return _error(str(ex), 500)
 
 
 @api.route("/", methods=["GET"])

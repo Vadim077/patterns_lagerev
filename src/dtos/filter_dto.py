@@ -10,7 +10,7 @@ from src.dtos.filter_item_dto import filter_item_dto
 DTO набора правил фильтрации данных
 """
 class filter_dto(entity_model):
-    __filters: list = []
+    __filters: list = None
 
     def __init__(self, filters: list = None) -> None:
         super().__init__(name="Набор фильтров")
@@ -41,6 +41,11 @@ class filter_dto(entity_model):
         validator.validate(item, filter_item_dto)
         self.__filters.append(item)
 
+    @property
+    def is_empty(self) -> bool:
+        """Признак отсутствия активных правил фильтрации"""
+        return len(self.__filters) == 0
+
     @classmethod
     def create(cls, data: dict, service: Optional[Any] = None) -> "filter_dto":
         """Фабричный метод создания набора фильтров из словаря"""
@@ -50,6 +55,12 @@ class filter_dto(entity_model):
         raw_filters = data.get("filters")
         if raw_filters is None:
             raw_filters = []
+            if "name" in data and data["name"] is not None and str(data["name"]).strip():
+                name_op = data.get("name_filter_type") or data.get("filter_type") or "LIKE"
+                raw_filters.append(filter_item_dto(field_name="name", filter_type=name_op, value=str(data["name"]).strip()))
+            if "id" in data and data["id"] is not None and str(data["id"]).strip():
+                id_op = data.get("id_filter_type") or "EQUALS"
+                raw_filters.append(filter_item_dto(field_name="id", filter_type=id_op, value=str(data["id"]).strip()))
         elif not isinstance(raw_filters, list):
             raise arguments_exception(field="filters", message="Поле filters должно быть списком")
 
