@@ -20,10 +20,10 @@ def test_api_entities_list(client):
     # Проверка
     assert response.status_code == 200
     data = response.get_json()
-    assert "recipes" in data
-    assert "nomenclatures" in data
-    assert "ranges" in data
-    assert len(data["recipes"]) > 0
+    assert "recipe_model" in data
+    assert "nomenclature_model" in data
+    assert "range_model" in data
+    assert len(data["recipe_model"]) > 0
 
 
 def test_api_get_report_by_format_txt(client):

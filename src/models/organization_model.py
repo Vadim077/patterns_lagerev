@@ -1,6 +1,10 @@
 from src.core.entity_model import entity_model
 from src.core.exception import arguments_exception
+from typing import Optional
 
+from src.core.abstract_deserialization_context import (
+    abstract_deserialization_context,
+)
 
 class organization_model(entity_model):
     """
@@ -97,3 +101,36 @@ class organization_model(entity_model):
                 message="Форма собственности не должна превышать 10 символов",
             )
         self._ownership_type = cleaned
+
+    """
+    Фабричный метод создания организации из словаря
+    """
+    @classmethod
+    def create(
+        cls,
+        data: dict,
+        service: Optional[abstract_deserialization_context] = None,
+    ) -> "organization_model":
+        if data is None or not isinstance(data, dict):
+            raise arguments_exception(
+                field="data",
+                message="Данные должны быть словарём",
+            )
+
+        instance = cls(
+            name=data.get("name"),
+            inn=data.get("inn"),
+            bik=data.get("bik"),
+            account=data.get("account"),
+            ownership_type=data.get("ownership_type"),
+        )
+
+        item_id = data.get("id")
+
+        if item_id:
+            instance.id = item_id
+
+            if service is not None:
+                service.set_cache(cls, item_id, instance)
+
+        return instance

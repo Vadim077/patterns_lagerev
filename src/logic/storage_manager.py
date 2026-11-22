@@ -1,4 +1,9 @@
 from src.core.abstract_manager import abstract_manager
+from src.core.common import common
+from src.core.exception import arguments_exception
+from src.logic.convert_factory import convert_factory
+from src.logic.deserializer import deserializer
+from src.logic.storage_reposity import storage_repository
 from src.models import (
     settings_model,
     range_model,
@@ -8,8 +13,6 @@ from src.models import (
     recipe_model,
 )
 import json
-from src.logic.convert_factory import convert_factory
-from src.logic.deserializer import deserializer
 
 """
 Центральное хранилище данных приложения (Singleton)
@@ -25,6 +28,7 @@ class storage_manager(abstract_manager):
     __nomenclatures: list = []
     __recipes: list = []
     __collections_map: dict = None
+    __repository: storage_repository = None
 
     """
     Паттерн Singleton
@@ -38,6 +42,8 @@ class storage_manager(abstract_manager):
     Конструктор хранилища
     """
     def __init__(self, settings: settings_model = None) -> None:
+        if self.__repository is None:
+            self.__repository = storage_repository()
         if settings is not None:
             self.__settings = settings
             self.convert()
@@ -47,23 +53,40 @@ class storage_manager(abstract_manager):
     """
     @staticmethod
     def range_key() -> str:
+        """Единицы измерения"""
         return range_model.__name__
 
     @staticmethod
     def group_key() -> str:
+        """Группы номенклатуры"""
         return nomenclature_group_model.__name__
 
     @staticmethod
     def storage_key() -> str:
+        """Склады"""
         return storage_model.__name__
 
     @staticmethod
     def nomenclature_key() -> str:
+        """Номенклатура"""
         return nomenclature_model.__name__
 
     @staticmethod
     def recipe_key() -> str:
+        """Рецепты"""
         return recipe_model.__name__
+
+    @staticmethod
+    def domains() -> dict:
+        """Получить список всех ключей и описания к ним"""
+        return common.domains(storage_manager)
+
+    @property
+    def repository(self) -> storage_repository:
+        """Репозиторий с данными и счетчиками связей"""
+        if self.__repository is None:
+            self.__repository = storage_repository()
+        return self.__repository
 
     """
     Словарь всех коллекций данных хранилища по ключам моделей
@@ -184,6 +207,11 @@ class storage_manager(abstract_manager):
             "единица": self.__ranges,
             "единицы": self.__ranges,
             "единица_измерения": self.__ranges,
+            "range_model": self.__ranges,
+            "nomenclature_group_model": self.__groups,
+            "storage_model": self.__storages,
+            "nomenclature_model": self.__nomenclatures,
+            "recipe_model": self.__recipes,
             "storage": self.__storages,
             "storages": self.__storages,
             "склад": self.__storages,
@@ -209,7 +237,7 @@ class storage_manager(abstract_manager):
             self.__init_collections_map()
 
         target_collection = self.__collections_map.get(t)
-        if not target_collection:
+        if target_collection is None:
             return None
 
         for item in target_collection:
@@ -217,6 +245,29 @@ class storage_manager(abstract_manager):
                 return item
 
         return None
+
+    def find_in_all_collections(self, entity_id: str) -> object:
+        """Поиск сущности по идентификатору во всех коллекциях"""
+        eid = str(entity_id).strip()
+        for collection in self.data.values():
+            for item in collection:
+                if getattr(item, "id", None) == eid or getattr(item, "unique_code", None) == eid:
+                    return item
+        return None
+
+    def get_collection(self, entity_type: str) -> list:
+        """Возвращает коллекцию по типу доменной сущности"""
+        if self.__collections_map is None:
+            self.__init_collections_map()
+
+        collection = self.__collections_map.get(entity_type.strip().lower())
+
+        if collection is None:
+            raise ValueError(
+                f"Коллекция для типа '{entity_type}' не найдена"
+            )
+
+        return collection
 
     """
     Переопределенный метод обработки данных
@@ -231,6 +282,7 @@ class storage_manager(abstract_manager):
         self.__init_storages()
         self.__init_nomenclatures()
         self.__init_recipes()
+        self.repository.rebuild(self)
         return True
 
     """
@@ -244,6 +296,8 @@ class storage_manager(abstract_manager):
         self.__recipes.clear()
         self.__collections_map = None
         self.__settings = None
+        if self.__repository is not None:
+            self.__repository.clear()
 
     """
     Генерация базовых и производных единиц измерения через фабричные методы

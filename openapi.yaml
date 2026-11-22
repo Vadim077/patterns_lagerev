@@ -1,0 +1,483 @@
+openapi: 3.0.0
+
+info:
+  title: Patterns REST API
+  version: "1.0.0"
+  description: REST API проекта ООО "Ромашка"
+
+servers:
+  - url: http://localhost:8080
+    description: Локальный сервер
+
+paths:
+  /api/report-formats:
+    get:
+      summary: Получить список форматов отчётов
+      operationId: main.get_report_formats
+      responses:
+        "200":
+          description: Список форматов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /api/entities:
+    get:
+      summary: Получить список доменных сущностей
+      operationId: main.list_entities
+      responses:
+        "200":
+          description: Списки сущностей
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntityCollections'
+
+  /api/entities/{entity_type}/{entity_id}:
+    parameters:
+      - name: entity_type
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Тип доменной сущности
+
+      - name: entity_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Уникальный идентификатор сущности
+
+    put:
+      summary: Создать доменную сущность
+      operationId: main.put_entity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntityRequest'
+      responses:
+        "201":
+          description: Сущность создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntityResponse'
+
+        "400":
+          description: Некорректные данные
+
+        "409":
+          description: Сущность уже существует
+
+        "500":
+          description: Связанная сущность отсутствует
+
+    get:
+      summary: Получить карточку сущности
+      operationId: main.get_entity
+      responses:
+        "200":
+          description: JSON-карточка сущности
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntityResponse'
+
+        "400":
+          description: Некорректный тип сущности
+
+        "404":
+          description: Сущность не найдена
+
+    patch:
+      summary: Частично обновить сущность
+      operationId: main.patch_entity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntityPatch'
+      responses:
+        "200":
+          description: Сущность обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntityResponse'
+
+        "400":
+          description: Ошибка валидации или изменение ID
+
+        "404":
+          description: Сущность не найдена
+
+        "500":
+          description: Связанная сущность отсутствует
+
+    delete:
+      summary: Удалить сущность
+      operationId: main.delete_entity
+      responses:
+        "200":
+          description: Сущность удалена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+
+        "404":
+          description: Сущность не найдена
+
+        "409":
+          description: Сущность используется другими объектами
+
+  /api/report/{format_name}/{entity_type}/{entity_id}:
+    get:
+      summary: Получить отчёт в заданном формате
+      operationId: main.get_report_by_format
+      parameters:
+        - name: format_name
+          in: path
+          required: true
+          schema:
+            type: string
+
+        - name: entity_type
+          in: path
+          required: true
+          schema:
+            type: string
+
+        - name: entity_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Сформированный отчёт
+
+        "404":
+          description: Сущность не найдена
+
+  /api/report/default/{entity_type}/{entity_id}:
+    get:
+      summary: Получить отчёт в формате по умолчанию
+      operationId: main.get_report_default
+      parameters:
+        - name: entity_type
+          in: path
+          required: true
+          schema:
+            type: string
+
+        - name: entity_id
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Сформированный отчёт
+
+        "404":
+          description: Сущность не найдена
+
+  /api/get_report:
+    get:
+      summary: Получить отчёт через query-параметры
+      operationId: main.get_report_query
+      parameters:
+        - name: format
+          in: query
+          required: false
+          schema:
+            type: string
+
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Сформированный отчёт
+
+        "400":
+          description: Некорректные параметры
+
+        "404":
+          description: Сущность не найдена
+
+components:
+  schemas:
+    EntityId:
+      type: string
+      description: Уникальный идентификатор сущности
+      minLength: 1
+
+    EntityType:
+      type: string
+      description: Тип доменной сущности из реестра фабрики
+      enum:
+        - range_model
+        - nomenclature_group_model
+        - storage_model
+        - nomenclature_model
+        - recipe_model
+
+    BaseEntity:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/EntityId'
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+        type:
+          $ref: '#/components/schemas/EntityType'
+      required: [id, name, type]
+
+    EntityReference:
+      type: object
+      description: Вложенная ссылка на доменную сущность
+      properties:
+        id:
+          $ref: '#/components/schemas/EntityId'
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/EntityType'
+      required: [id]
+
+    RangeEntity:
+      allOf:
+        - $ref: '#/components/schemas/BaseEntity'
+        - type: object
+          properties:
+            conversion_factor:
+              type: number
+              format: float
+              minimum: 0
+              exclusiveMinimum: true
+            base_range:
+              nullable: true
+              $ref: '#/components/schemas/EntityReference'
+
+    GroupEntity:
+      allOf:
+        - $ref: '#/components/schemas/BaseEntity'
+
+    StorageEntity:
+      allOf:
+        - $ref: '#/components/schemas/BaseEntity'
+
+    NomenclatureEntity:
+      allOf:
+        - $ref: '#/components/schemas/BaseEntity'
+        - type: object
+          properties:
+            full_name:
+              type: string
+              minLength: 1
+              maxLength: 255
+            group:
+              nullable: true
+              $ref: '#/components/schemas/EntityReference'
+            range:
+              nullable: true
+              $ref: '#/components/schemas/EntityReference'
+
+    RecipeRowEntity:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/EntityId'
+        name:
+          type: string
+        type:
+          type: string
+          enum: [recipe_row_model]
+        brutto:
+          type: number
+          format: float
+          minimum: 0
+        netto:
+          type: number
+          format: float
+          minimum: 0
+        nomenclature:
+          $ref: '#/components/schemas/EntityReference'
+        range:
+          nullable: true
+          $ref: '#/components/schemas/EntityReference'
+        sub_recipe:
+          nullable: true
+          $ref: '#/components/schemas/EntityReference'
+
+    RecipeEntity:
+      allOf:
+        - $ref: '#/components/schemas/BaseEntity'
+        - type: object
+          properties:
+            dish:
+              nullable: true
+              $ref: '#/components/schemas/EntityReference'
+            rows:
+              type: array
+              items:
+                $ref: '#/components/schemas/RecipeRowEntity'
+            cooking_time:
+              type: integer
+              minimum: 0
+            instructions:
+              type: array
+              items:
+                type: string
+            portions:
+              type: integer
+              minimum: 1
+
+    RangeRequest:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/EntityId'
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+        conversion_factor:
+          type: number
+          format: float
+          minimum: 0
+          exclusiveMinimum: true
+        base_range:
+          nullable: true
+          $ref: '#/components/schemas/EntityReference'
+        base_range_id:
+          $ref: '#/components/schemas/EntityId'
+
+    GroupRequest:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/EntityId'
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+
+    StorageRequest:
+      $ref: '#/components/schemas/GroupRequest'
+
+    NomenclatureRequest:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/EntityId'
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+        full_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        group:
+          $ref: '#/components/schemas/EntityReference'
+        range:
+          $ref: '#/components/schemas/EntityReference'
+        group_id:
+          $ref: '#/components/schemas/EntityId'
+        range_id:
+          $ref: '#/components/schemas/EntityId'
+
+    RecipeRequest:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/EntityId'
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+        dish:
+          $ref: '#/components/schemas/EntityReference'
+        dish_id:
+          $ref: '#/components/schemas/EntityId'
+        rows:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipeRowEntity'
+        cooking_time:
+          type: integer
+          minimum: 0
+        instructions:
+          type: array
+          items:
+            type: string
+        portions:
+          type: integer
+          minimum: 1
+
+    EntityRequest:
+      description: Данные для создания сущности; ID обычно передаётся в URL
+      anyOf:
+        - $ref: '#/components/schemas/RangeRequest'
+        - $ref: '#/components/schemas/GroupRequest'
+        - $ref: '#/components/schemas/StorageRequest'
+        - $ref: '#/components/schemas/NomenclatureRequest'
+        - $ref: '#/components/schemas/RecipeRequest'
+
+    EntityPatch:
+      description: Частичные поля, разрешённые для PATCH
+      anyOf:
+        - $ref: '#/components/schemas/RangeRequest'
+        - $ref: '#/components/schemas/GroupRequest'
+        - $ref: '#/components/schemas/StorageRequest'
+        - $ref: '#/components/schemas/NomenclatureRequest'
+        - $ref: '#/components/schemas/RecipeRequest'
+
+    EntityResponse:
+      anyOf:
+        - $ref: '#/components/schemas/RangeEntity'
+        - $ref: '#/components/schemas/GroupEntity'
+        - $ref: '#/components/schemas/StorageEntity'
+        - $ref: '#/components/schemas/NomenclatureEntity'
+        - $ref: '#/components/schemas/RecipeEntity'
+
+    DeleteResponse:
+      type: object
+      properties:
+        deleted:
+          type: boolean
+        entity_type:
+          $ref: '#/components/schemas/EntityType'
+        id:
+          $ref: '#/components/schemas/EntityId'
+      required: [deleted, entity_type, id]
+
+    EntityCollections:
+      type: object
+      description: Коллекции, сгруппированные по зарегистрированным типам моделей
+      additionalProperties:
+        type: array
+        items:
+          $ref: '#/components/schemas/EntityResponse'
