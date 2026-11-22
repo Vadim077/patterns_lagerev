@@ -396,5 +396,10 @@ def test_storage_manager_load_json_rejects_unknown_model_type(tmp_path):
     storage = storage_manager()
     storage.clear()
 
-    with pytest.raises(arguments_exception):
-        storage.load_json(str(file_path))
+    try:
+        with pytest.raises(arguments_exception):
+            storage.load_json(str(file_path))
+    finally:
+        settings = settings_model()
+        settings.is_first_start = True
+        storage.settings = settings

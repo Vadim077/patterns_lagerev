@@ -27,7 +27,7 @@ def test_repository_allows_unreferenced_entity_deletion():
     # Подготовка
     repository = storage_repository()
     repository.rebuild(storage_mgr)
-    storage_entity = storage_mgr.storages[0]
+    storage_entity = storage_mgr.storages[1]
 
     # Действие
     can_delete = repository.can_delete(storage_entity)
@@ -42,7 +42,7 @@ def test_repository_removes_deleted_entity_from_index():
     # Подготовка
     repository = storage_repository()
     repository.rebuild(storage_mgr)
-    storage_entity = storage_mgr.storages[0]
+    storage_entity = storage_mgr.storages[1]
 
     # Действие
     repository.delete(storage_entity)

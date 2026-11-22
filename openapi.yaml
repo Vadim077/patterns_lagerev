@@ -224,8 +224,114 @@ paths:
         "404":
           description: Сущность не найдена
 
+  /api/entities/{entity_type}/filter:
+    parameters:
+      - name: entity_type
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Тип доменной сущности для фильтрации
+    post:
+      summary: Фильтрация сущностей по DTO модели через шаблон Прототип
+      operationId: main.filter_entities
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterDto'
+      responses:
+        "200":
+          description: Список отфильтрованных сущностей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        "400":
+          description: Некорректные параметры фильтрации
+        "500":
+          description: Внутренняя ошибка сервера
+
+  /api/report/osv:
+    post:
+      summary: Сформировать Оборотно-сальдовую ведомость (ОСВ) через шаблон Прототип
+      operationId: main.get_turnover_balance_sheet
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterDto'
+      responses:
+        "200":
+          description: Строки оборотно-сальдовой ведомости
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TurnoverRowDto'
+        "400":
+          description: Некорректные параметры запроса
+        "500":
+          description: Внутренняя ошибка сервера
+
 components:
   schemas:
+    FilterItemDto:
+      type: object
+      required:
+        - field_name
+      properties:
+        field_name:
+          type: string
+        filter_type:
+          type: string
+          enum:
+            - EQUALS
+            - LIKE
+            - GREATER_THAN
+            - LESS_THAN
+            - GREATER_EQUAL
+            - LESS_EQUAL
+        value:
+          nullable: true
+
+    FilterDto:
+      type: object
+      properties:
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/FilterItemDto'
+
+    TurnoverRowDto:
+      type: object
+      properties:
+        storage_id:
+          type: string
+        storage_name:
+          type: string
+        nomenclature_id:
+          type: string
+        nomenclature_name:
+          type: string
+        range_id:
+          type: string
+        range_name:
+          type: string
+        start_balance:
+          type: number
+        receipts:
+          type: number
+        expenditures:
+          type: number
+        end_balance:
+          type: number
+
     EntityId:
       type: string
       description: Уникальный идентификатор сущности
@@ -240,6 +346,7 @@ components:
         - storage_model
         - nomenclature_model
         - recipe_model
+        - transaction_model
 
     BaseEntity:
       type: object

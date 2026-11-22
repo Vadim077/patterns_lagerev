@@ -15,6 +15,7 @@ from src.models import (
     recipe_model,
     recipe_row_model,
     storage_model,
+    transaction_model,
 )
 from src.models.organization_model import organization_model
 from src.models.settings_model import settings_model
@@ -51,6 +52,7 @@ class deserialize_factory(abstract_deserialize_factory):
             report_result_dto.__name__: report_result_dto,
             settings_model.__name__: settings_model,
             organization_model.__name__: organization_model,
+            transaction_model.__name__: transaction_model,
         }
 
     @property

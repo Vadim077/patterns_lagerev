@@ -6,6 +6,7 @@ from src.models.nomenclature_model import nomenclature_model
 from src.models.settings_model import settings_model
 from src.models.recipe_row_model import recipe_row_model
 from src.models.recipe_model import recipe_model
+from src.models.transaction_model import transaction_model
 
 __all__ = [
     "nomenclature_group_model",
@@ -16,4 +17,5 @@ __all__ = [
     "settings_model",
     "recipe_row_model",
     "recipe_model",
+    "transaction_model",
 ]

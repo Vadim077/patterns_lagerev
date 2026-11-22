@@ -11,7 +11,9 @@ from src.models import (
     storage_model,
     nomenclature_model,
     recipe_model,
+    transaction_model,
 )
+import datetime
 import json
 
 """
@@ -27,6 +29,7 @@ class storage_manager(abstract_manager):
     __storages: list = []
     __nomenclatures: list = []
     __recipes: list = []
+    __transactions: list = []
     __collections_map: dict = None
     __repository: storage_repository = None
 
@@ -77,6 +80,11 @@ class storage_manager(abstract_manager):
         return recipe_model.__name__
 
     @staticmethod
+    def transaction_key() -> str:
+        """Складские транзакции"""
+        return transaction_model.__name__
+
+    @staticmethod
     def domains() -> dict:
         """Получить список всех ключей и описания к ним"""
         return common.domains(storage_manager)
@@ -99,6 +107,7 @@ class storage_manager(abstract_manager):
             self.storage_key(): self.__storages,
             self.nomenclature_key(): self.__nomenclatures,
             self.recipe_key(): self.__recipes,
+            self.transaction_key(): self.__transactions,
         }
 
     """
@@ -152,6 +161,13 @@ class storage_manager(abstract_manager):
         return self.__recipes
 
     """
+    Список складских транзакций
+    """
+    @property
+    def transactions(self) -> list[transaction_model]:
+        return self.__transactions
+
+    """
     Добавить элемент в список с проверкой уникальности
     """
     def __append_unique(self, target_list: list, item: object) -> bool:
@@ -159,6 +175,12 @@ class storage_manager(abstract_manager):
             target_list.append(item)
             return True
         return False
+
+    """
+    Добавить транзакцию (с гарантией уникальности)
+    """
+    def add_transaction(self, item: transaction_model) -> bool:
+        return self.__append_unique(self.__transactions, item)
 
     """
     Добавить единицу измерения (с гарантией уникальности)
@@ -220,6 +242,11 @@ class storage_manager(abstract_manager):
             "groups": self.__groups,
             "группа": self.__groups,
             "группы": self.__groups,
+            "transaction": self.__transactions,
+            "transactions": self.__transactions,
+            "транзакция": self.__transactions,
+            "транзакции": self.__transactions,
+            "transaction_model": self.__transactions,
         }
 
     """
@@ -277,11 +304,19 @@ class storage_manager(abstract_manager):
         if self.__settings is None or not self.__settings.is_first_start:
             return False
 
+        self.__ranges.clear()
+        self.__groups.clear()
+        self.__storages.clear()
+        self.__nomenclatures.clear()
+        self.__recipes.clear()
+        self.__transactions.clear()
+
         self.__init_ranges()
         self.__init_groups()
         self.__init_storages()
         self.__init_nomenclatures()
         self.__init_recipes()
+        self.__init_transactions()
         self.repository.rebuild(self)
         return True
 
@@ -294,6 +329,7 @@ class storage_manager(abstract_manager):
         self.__storages.clear()
         self.__nomenclatures.clear()
         self.__recipes.clear()
+        self.__transactions.clear()
         self.__collections_map = None
         self.__settings = None
         if self.__repository is not None:
@@ -387,6 +423,97 @@ class storage_manager(abstract_manager):
         # 2. Рецепт готового блюда с полуфабрикатом и упаковкой
         cookie_recipe = recipe_model.create_cookie_recipe(cookie_nom, dough_nom, dough_recipe, box_nom)
         self.add_recipe(cookie_recipe)
+
+    """
+    Генерация складских транзакций (движений)
+    """
+    def __init_transactions(self) -> None:
+        if not self.__storages or not self.__nomenclatures:
+            return
+
+        storage = self.__storages[0]
+        flour = next((n for n in self.__nomenclatures if n.name == "Мука"), None)
+        sugar = next((n for n in self.__nomenclatures if n.name == "Сахар"), None)
+        butter = next((n for n in self.__nomenclatures if n.name == "Масло"), None)
+        egg = next((n for n in self.__nomenclatures if n.name == "Яйцо"), None)
+
+        kg = next((r for r in self.__ranges if r.name == "кг"), None)
+        piece = next((r for r in self.__ranges if r.name == "штука"), None)
+
+        if not all([storage, flour, sugar, butter, egg, kg, piece]):
+            return
+
+        # 1. Поступление муки (100 кг, 2026-10-15)
+        t1 = transaction_model("Поступление муки")
+        t1.storage = storage
+        t1.nomenclature = flour
+        t1.range = kg
+        t1.period = datetime.datetime(2026, 10, 15, 10, 0)
+        t1.value = 100.0
+        self.add_transaction(t1)
+
+        # 2. Списание муки (-20 кг, 2026-11-10)
+        t2 = transaction_model("Списание муки")
+        t2.storage = storage
+        t2.nomenclature = flour
+        t2.range = kg
+        t2.period = datetime.datetime(2026, 11, 10, 12, 0)
+        t2.value = -20.0
+        self.add_transaction(t2)
+
+        # 3. Списание муки (-5 кг, 2026-11-15)
+        t3 = transaction_model("Списание муки")
+        t3.storage = storage
+        t3.nomenclature = flour
+        t3.range = kg
+        t3.period = datetime.datetime(2026, 11, 15, 14, 0)
+        t3.value = -5.0
+        self.add_transaction(t3)
+
+        # 4. Поступление сахара (50 кг, 2026-10-20)
+        t4 = transaction_model("Поступление сахара")
+        t4.storage = storage
+        t4.nomenclature = sugar
+        t4.range = kg
+        t4.period = datetime.datetime(2026, 10, 20, 9, 0)
+        t4.value = 50.0
+        self.add_transaction(t4)
+
+        # 5. Списание сахара (-10 кг, 2026-11-12)
+        t5 = transaction_model("Списание сахара")
+        t5.storage = storage
+        t5.nomenclature = sugar
+        t5.range = kg
+        t5.period = datetime.datetime(2026, 11, 12, 11, 0)
+        t5.value = -10.0
+        self.add_transaction(t5)
+
+        # 6. Поступление масла (30 кг, 2026-11-02)
+        t6 = transaction_model("Поступление масла")
+        t6.storage = storage
+        t6.nomenclature = butter
+        t6.range = kg
+        t6.period = datetime.datetime(2026, 11, 2, 8, 30)
+        t6.value = 30.0
+        self.add_transaction(t6)
+
+        # 7. Поступление яиц (200 шт, 2026-11-05)
+        t7 = transaction_model("Поступление яиц")
+        t7.storage = storage
+        t7.nomenclature = egg
+        t7.range = piece
+        t7.period = datetime.datetime(2026, 11, 5, 9, 30)
+        t7.value = 200.0
+        self.add_transaction(t7)
+
+        # 8. Списание яиц (-50 шт, 2026-11-18)
+        t8 = transaction_model("Списание яиц")
+        t8.storage = storage
+        t8.nomenclature = egg
+        t8.range = piece
+        t8.period = datetime.datetime(2026, 11, 18, 16, 0)
+        t8.value = -50.0
+        self.add_transaction(t8)
 
     """
     Экспорт всех данных хранилища в JSON с использованием convert_factory

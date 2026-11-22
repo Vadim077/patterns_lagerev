@@ -86,6 +86,13 @@ class nomenclature_model(entity_model):
             )
         self._range = value
 
+    @property
+    def base_range(self) -> Optional[range_model]:
+        """Базовая единица измерения номенклатуры"""
+        if self._range is not None:
+            return self._range.base_range or self._range
+        return None
+
     """
     Фабричный метод: Мука
     """
