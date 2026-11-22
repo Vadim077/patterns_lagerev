@@ -289,10 +289,6 @@ def filter_entities(entity_type: str):
     "/api/reports/turnover-balance-sheet",
     methods=["POST"],
 )
-@api.route(
-    "/api/osv",
-    methods=["POST"],
-)
 def get_turnover_balance_sheet():
     try:
         body = flask.request.get_json(silent=True) or {}
@@ -309,6 +305,14 @@ def get_turnover_balance_sheet():
         return _report_error(str(ex), 400)
     except Exception as ex:
         return _report_error(str(ex), 500)
+
+
+@api.route(
+    "/api/osv",
+    methods=["POST"],
+)
+def get_osv_report():
+    return get_turnover_balance_sheet()
 
 
 @api.route(

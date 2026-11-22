@@ -277,7 +277,7 @@ paths:
   /api/osv:
     post:
       summary: Сформировать Оборотно-сальдовую ведомость (ОСВ) через шаблон Прототип
-      operationId: main.get_turnover_balance_sheet
+      operationId: main.get_osv_report
       requestBody:
         required: false
         content:
