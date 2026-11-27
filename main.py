@@ -298,7 +298,7 @@ def get_turnover_balance_sheet():
         f_dto = filter_dto.create(body) if body else None
         rows = turnover_svc.build(filter_instance=f_dto)
 
-        result = [row.to_dict() for row in rows]
+        result = convert_fac.convert(rows)
         return flask.jsonify(result), 200
 
     except (ValueError, arguments_exception) as ex:
