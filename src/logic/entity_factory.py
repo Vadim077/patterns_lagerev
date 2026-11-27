@@ -4,6 +4,7 @@ from src.models import (
     range_model,
     recipe_model,
     storage_model,
+    transaction_model,
 )
 
 
@@ -17,6 +18,7 @@ class entity_factory:
             "storage_model": storage_model,
             "nomenclature_model": nomenclature_model,
             "recipe_model": recipe_model,
+            "transaction_model": transaction_model,
         }
 
     def get_model_class(self, entity_type: str) -> type:

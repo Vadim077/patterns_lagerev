@@ -1,4 +1,7 @@
+import datetime
+from typing import Any
 from src.core.abstract_model import abstract_model
+from src.core.filter_type_enum import filter_type_enum
 from src.core.validator import validator, arguments_exception
 
 
@@ -94,3 +97,64 @@ class common:
             result[key_value] = description
 
         return dict(sorted(result.items()))
+
+    """
+    Получить значения по точечному пути (поддерживает вложенные объекты и списки)
+    """
+    @staticmethod
+    def get_values_by_path(source: object, field_path: str) -> list:
+        if source is None or not field_path:
+            return []
+
+        parts = field_path.strip().split(".")
+        current_items = [source]
+
+        for part in parts:
+            next_items = []
+            for item in current_items:
+                if item is None:
+                    continue
+
+                if isinstance(item, (list, tuple)):
+                    for sub_item in item:
+                        if sub_item is None:
+                            continue
+                        if hasattr(sub_item, part):
+                            val = getattr(sub_item, part)
+                            if isinstance(val, (list, tuple)):
+                                next_items.extend(val)
+                            else:
+                                next_items.append(val)
+                        elif isinstance(sub_item, dict) and part in sub_item:
+                            val = sub_item[part]
+                            if isinstance(val, (list, tuple)):
+                                next_items.extend(val)
+                            else:
+                                next_items.append(val)
+                else:
+                    if hasattr(item, part):
+                        val = getattr(item, part)
+                        if isinstance(val, (list, tuple)):
+                            next_items.extend(val)
+                        else:
+                            next_items.append(val)
+                    elif isinstance(item, dict) and part in item:
+                        val = item[part]
+                        if isinstance(val, (list, tuple)):
+                            next_items.extend(val)
+                        else:
+                            next_items.append(val)
+
+            current_items = next_items
+
+        return current_items
+
+    """
+    Проверить соответствие значения условию фильтрации
+    """
+    @staticmethod
+    def match_value(actual: Any, expected: Any, op: filter_type_enum) -> bool:
+        from src.logic.filter_comparator_factory import filter_comparator_factory
+
+        comparator = filter_comparator_factory().create(op)
+        return comparator.compare(actual, expected)

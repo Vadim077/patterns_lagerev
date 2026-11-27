@@ -20,7 +20,7 @@ from src.models import (
 
 
 class dated_stub:
-    """Заглушка для проверки datetime_convertor"""
+    """Тестовый объект для проверки datetime_convertor"""
 
     @property
     def created_at(self) -> datetime:
